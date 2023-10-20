@@ -6,15 +6,12 @@
 //
 
 import SwiftUI
-
 import Combine
-
 
 // TODO: the introspect lib might also be useful
 // https://stackoverflow.com/questions/59003612/extend-swiftui-keyboard-with-custom-button
 
 struct TextEditorWithDone: UIViewRepresentable {
-    
     @Binding var text: String
     
     func makeCoordinator() -> Coordinator {
@@ -22,30 +19,28 @@ struct TextEditorWithDone: UIViewRepresentable {
     }
     
     func makeUIView(context: Context) -> UITextView {
-        
         let textfield = UITextView()
         textfield.font = UIFont.systemFont(ofSize: UIFont.systemFontSize + 2)
         
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: textfield.frame.size.width, height: 44))
-        let doneButton = UIBarButtonItem(title: "Dismiss", style: .done, target: self, action: #selector(textfield.doneButtonTapped(button:)))
-        
-        let spacer = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
-
+        let doneButton = UIBarButtonItem(title: "Dismiss",
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(textfield.doneButtonTapped(button:)))
+        let spacer = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace,
+                                     target: nil,
+                                     action: nil)
         toolBar.items = [spacer, doneButton]
         
         textfield.inputAccessoryView = toolBar
         textfield.delegate = context.coordinator
         return textfield
-        
     }
     
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.text = text
-        
     }
-    
 }
-
 
 extension TextEditorWithDone {
     class Coordinator: NSObject, UITextViewDelegate {
@@ -63,16 +58,14 @@ extension TextEditorWithDone {
     }
 }
 
-extension  UITextView{
+extension UITextView {
     @objc func doneButtonTapped(button:UIBarButtonItem) -> Void {
        self.resignFirstResponder()
     }
-
 }
 
 struct TextFieldWithDone: UIViewRepresentable {
-    
-    let placeHolder : String
+    let placeHolder: String
     @Binding var text: String
     var keyType: UIKeyboardType
     let showToolbar = false
@@ -89,8 +82,9 @@ struct TextFieldWithDone: UIViewRepresentable {
         textfield.returnKeyType = .done
         textfield.autocorrectionType = .no
         textfield.text = text
-        
-        textfield.addTarget(textfield, action: #selector(textfield.doneButtonTapped(button:)), for: .editingDidEndOnExit)
+        textfield.addTarget(textfield,
+                            action: #selector(textfield.doneButtonTapped(button:)),
+                            for: .editingDidEndOnExit)
         
         if showToolbar {
             let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: textfield.frame.size.width, height: 44))
@@ -125,11 +119,10 @@ extension TextFieldWithDone {
     }
 }
 
-extension  UITextField{
+extension UITextField {
     @objc func doneButtonTapped(button:UIBarButtonItem) -> Void {
        self.resignFirstResponder()
     }
-
 }
 
 extension UIView {
@@ -154,8 +147,14 @@ final class KeyboardResponder: ObservableObject {
 
     init(center: NotificationCenter = .default) {
         notificationCenter = center
-        notificationCenter.addObserver(self, selector: #selector(keyBoardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(keyBoardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(keyBoardWillShow(notification:)),
+                                       name: UIResponder.keyboardWillShowNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(keyBoardWillHide(notification:)),
+                                       name: UIResponder.keyboardWillHideNotification,
+                                       object: nil)
     }
 
     deinit {
@@ -182,7 +181,8 @@ extension UIApplication {
 }
 
 struct CustomButtonStyle: ButtonStyle {
-    let bgColor : Color
+    let bgColor: Color
+    
     func makeBody(configuration: Self.Configuration) -> some View {
         return withAnimation(.easeInOut(duration: 0.2)) {
             configuration.label
@@ -191,17 +191,19 @@ struct CustomButtonStyle: ButtonStyle {
                 .background(bgColor)
                 .cornerRadius(20.0)
                 .foregroundColor(Color.white)
-                .opacity(configuration.isPressed ? 0.7 : 1)
-                .scaleEffect(configuration.isPressed ? 0.8 : 1)
+                .opacity(configuration.isPressed ? 0.7: 1)
+                .scaleEffect(configuration.isPressed ? 0.8: 1)
         }
     }
 }
 
 struct YesNoButtonStyle: ButtonStyle {
-    let bgColor : Color
+    let bgColor: Color
+    
     init(bgColor: Color = Color.gray) {
         self.bgColor = bgColor
     }
+    
     func makeBody(configuration: Self.Configuration) -> some View {
         return withAnimation(.easeInOut(duration: 0.2)) {
             configuration.label
@@ -218,7 +220,8 @@ struct YesNoButtonStyle: ButtonStyle {
 struct RoundedCornersShape: Shape {
     let corners: UIRectCorner
     let radius: CGFloat
-    let extraHeight : CGFloat
+    let extraHeight: CGFloat
+    
     func path(in rect: CGRect) -> Path {
         let rectExtended = CGRect(x: rect.minX, y: rect.minY, width: rect.width, height: rect.height + extraHeight)
         let path = UIBezierPath(roundedRect: rectExtended,
@@ -228,67 +231,57 @@ struct RoundedCornersShape: Shape {
     }
 }
 
-// Extension to do both stroke and fill at same time
 extension Shape {
-    func fill<Fill: ShapeStyle, Stroke: ShapeStyle>(_ fillStyle: Fill, strokeBorder strokeStyle: Stroke, lineWidth: CGFloat = 1) -> some View {
+    func fill<Fill: ShapeStyle,
+              Stroke: ShapeStyle>(_ fillStyle: Fill,
+                                  strokeBorder strokeStyle: Stroke,
+                                  lineWidth: CGFloat = 1) -> some View {
         self
             .stroke(strokeStyle, lineWidth: lineWidth)
             .background(self.fill(fillStyle))
     }
 }
 
-
-struct BinaryChoiceQuestionView : View {
+struct BinaryChoiceQuestionView: View {
+    @ObservedObject var question: BinaryQuestion
+    let onChoiceMade: (() -> Void)?
     
-    @State var selectedIndices : Set<Int> = []
-    @ObservedObject var question : BinaryQuestion
+    @State private var selectedIndices: Set<Int> = []
+    @State private var autoAdvanceProgress: CGFloat = 0.0
+    @State private var goingToNext: Bool = true
     
-    let onChoiceMade : (() -> Void)?
+    private var progressView: some View {
+        Rectangle()
+            .frame(width: autoAdvanceProgress, height: 3, alignment: .top)
+            .foregroundColor(Color.accentColor)
+            .animation(.easeInOut(duration: 0.51), value: autoAdvanceProgress)
+    }
     
-    @State private var autoAdvanceProgress : CGFloat = 0.0
-    @State private var goingToNext : Bool = true
-    
-    var body : some View {
-        
+    var body: some View {
         VStack {
-            
-            //Text(question.title).font(.title).padding(16)
             Text(question.title).font(.title).fontWeight(.bold).padding(16)
             
-            //Spacer()
-            //Text("Choice2: ".appendingFormat("%i", selectedIndices.count)).opacity(0.5) // view refresh hack
-            
             HStack {
-                
                 Button(action: { selectChoice(0) }, label: {
                     Text(question.choices[0].text).font(.title).bold()
-                }).buttonStyle(YesNoButtonStyle(bgColor: selectedIndices.contains(0) ? Color.green : Color.gray))
+                })
+                .buttonStyle(YesNoButtonStyle(bgColor: selectedIndices.contains(0) ? Color.green: Color.gray))
                 .padding(6)
                 
                 
                 Button(action: { selectChoice(1) }, label: {
                     Text(question.choices[1].text).font(.title)
-                }).buttonStyle(YesNoButtonStyle(bgColor: selectedIndices.contains(1) ? Color.green : Color.gray))
+                })
+                .buttonStyle(YesNoButtonStyle(bgColor: selectedIndices.contains(1) ? Color.green: Color.gray))
                 .padding(6)
-                
-                
             }
-            //.frame(height: UIScreen.main.bounds.height * 0.6)
             .padding(EdgeInsets(top: 40, leading: 20, bottom: 20, trailing: 20))
-            
-        }.onAppear(perform: {
+        }.onAppear {
             self.autoAdvanceProgress = 0
             self.updateChoices()
-        })
+        }
         .frame(maxWidth: .infinity) // stretch whole width
-        .overlay(
-            withAnimation(.easeInOut(duration: 0.51)) {
-                Rectangle()
-                    .frame(width: autoAdvanceProgress, height: 3, alignment: .top)
-                    .foregroundColor(Color(.systemBlue))
-            },
-            alignment: .top
-        )
+        .overlay(progressView, alignment: .top)
     }
     
     // Update the local @State with selected choice
@@ -303,7 +296,7 @@ struct BinaryChoiceQuestionView : View {
         }
     }
     
-    func selectChoice( _ choiceIndex : Int ) {
+    func selectChoice(_ choiceIndex: Int) {
         selectedIndices = []
         selectedIndices.insert(choiceIndex)
         //question.choices[choiceIndex].selected = true;
@@ -323,27 +316,14 @@ struct BinaryChoiceQuestionView : View {
             }
             self.autoAdvanceProgress = 0
         }
-        
-        
     }
-    
 }
 
-
-
-struct ContactFormQuestionView : View {
+struct ContactFormQuestionView: View {
+    @ObservedObject var question: ContactFormQuestion
     
-    @ObservedObject var question : ContactFormQuestion
-    
-    init(question: ContactFormQuestion ) {
-        
-        self.question = question
-    }
-    
-    
-    var body : some View {
+    var body: some View {
         VStack {
-            //Text(question.title).font(.title).padding(16)
             Text(question.title).font(.title).fontWeight(.bold).padding(16)
 
             VStack(alignment: .leading) {
@@ -353,8 +333,8 @@ struct ContactFormQuestionView : View {
                 TextField("Name", text: $question.name)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .disableAutocorrection(true)
-            }.padding()
-            
+            }
+            .padding()
             
             VStack(alignment: .leading) {
                 Text("Email Address")
@@ -364,51 +344,46 @@ struct ContactFormQuestionView : View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .disableAutocorrection(true)
                     .textContentType(.emailAddress)
-                    
-                    
-            }.padding()
+            }
+            .padding()
             
             VStack(alignment: .leading) {
-                Text("Company ( optional )")
+                Text("Company (optional)")
                     .font(.callout)
                     .bold()
                 TextField("Company", text: $question.company)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .disableAutocorrection(true)
-            }.padding()
-            
+            }
+            .padding()
             
             VStack(alignment: .leading) {
-                Text("Comments ( optional )")
+                Text("Comments (optional)")
                     .font(.callout)
                     .bold()
                 TextField("Comments / Feedback", text: $question.feedback)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .disableAutocorrection(true)
-            }.padding()
-                    
+            }
+            .padding()
         }
-        
-                
     }
-    
-    
 }
 
-
-
-struct CommentsFormQuestionView : View {
+struct CommentsFormQuestionView: View {
+    @ObservedObject var question: CommentsFormQuestion
     
-    @ObservedObject var question : CommentsFormQuestion
-    
-    
-    
-    var body : some View {
+    var body: some View {
         VStack {
-            //Text(question.title).font(.title).padding(16)
-            Text(question.title).font(.title).fontWeight(.bold).padding(EdgeInsets(top: 12, leading: 28, bottom: 2, trailing: 28))
-            //Text(question.subtitle).font(.title3).background(Color.red).padding(16)
-            Text(question.subtitle).font(.title3).italic().foregroundColor(Color(.secondaryLabel))
+            Text(question.title)
+                .font(.title)
+                .fontWeight(.bold)
+                .padding(EdgeInsets(top: 12, leading: 28, bottom: 2, trailing: 28))
+
+            Text(question.subtitle)
+                .font(.title3)
+                .italic()
+                .foregroundColor(Color(.secondaryLabel))
                 .padding(EdgeInsets(top: 0, leading: 28, bottom: 1, trailing: 28))
             
             VStack(alignment: .leading) {
@@ -417,172 +392,115 @@ struct CommentsFormQuestionView : View {
                     .bold()
                 
                 TextFieldWithDone(placeHolder:"Email Address", text: $question.emailAddress, keyType: .emailAddress)
-                
-                // OR
-//                TextField("Email Address", text: $question.emailAddress )
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
-//                    .disableAutocorrection(true)
-//                    .textContentType(.emailAddress)
-                    
-                    
-            }.padding()
+            }
+            .padding()
             
             VStack(alignment: .leading) {
-
                 Text("Comments")
                     .font(.callout)
                     .bold()
-
-                TextEditorWithDone(text: $question.feedback )
+                
+                TextEditorWithDone(text: $question.feedback)
                     .disableAutocorrection(true)
                     .frame(height: 100)
-                    .overlay(RoundedRectangle(cornerRadius: 6)
-                                .stroke( Color(.systemGray5), lineWidth: 1) )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(Color(.systemGray5), lineWidth: 1)
+                    )
                     .background(RoundedRectangle(cornerRadius: 28).fill(Color.white))
-
-            }.padding()
-            
-        
+            }
+            .padding()
         }
-                
     }
-    
 }
 
-
-struct InlineMultipleChoiceQuestionGroupView : View {
-    
-    @ObservedObject var group : InlineMultipleChoiceQuestionGroup
-    @State var selectedIndices : Set<Int> = []
-    
-    @State var customText : String = ""
+struct InlineMultipleChoiceQuestionGroupView: View {
+    @ObservedObject var group: InlineMultipleChoiceQuestionGroup
+    @State var selectedIndices: Set<Int> = []
+    @State var customText: String = ""
     
     var body: some View {
-        
         VStack {
-            Text(group.title).font(.title).fontWeight(.bold).padding(EdgeInsets(top: 12, leading: 12, bottom: 1, trailing: 12))
+            Text(group.title)
+                .font(.title)
+                .fontWeight(.bold)
+                .padding(EdgeInsets(top: 12, leading: 12, bottom: 1, trailing: 12))
                 
             ForEach(group.questions, id: \.uuid) { inline_question in
-                
-                if inline_question.choices.first!.allowsCustomTextEntry {
-                    
-                    //Text("Other")
-                    //TextField("Other: ", text: $customText)
-                    
-//                    MultipleChoiceResponseView(question: inline_question,
-//                                               choice: inline_question.choices.first!,
-//                                               selectedIndices: $selectedIndices)
-                    
-                } else {
                 InlineMultipleChoiceQuestionView(question: inline_question)
                     .padding(7)
-                    //.background(LinearGradient(gradient: Gradient(colors: [Color(.systemGray6).opacity(0.6), Color(.systemGray6).opacity(0.4)]), startPoint: .top, endPoint: .bottom))
                     .background(Color(.systemGray5).opacity(0.15))
                     .cornerRadius(10)
                     .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color(.systemGray5), lineWidth: 2))
                     .padding(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
-                }
-                    
             }
         }
         .frame(maxWidth: .infinity) // stretch whole width
-        
     }
-    
 }
 
-
-struct InlineMultipleChoiceQuestionView : View {
+struct InlineMultipleChoiceQuestionView: View {
+    @ObservedObject var question: MultipleChoiceQuestion
+    @State var selectedChoices: Set<UUID> = []
     
-    @ObservedObject var question : MultipleChoiceQuestion
-    @State var selectedChoices : Set<UUID> = []
-    
-    let colors : [Color] = [.red, .orange, .green]
-    private func getColor( _ choice : MultipleChoiceResponse ) -> Color {
+    let colors: [Color] = [.red, .orange, .green]
+    private func getColor(_ choice: MultipleChoiceResponse) -> Color {
         return self.colors[ self.question.choices.firstIndex(where: { $0.uuid == choice.uuid })! ]
     }
-    var body: some View {
-        
-        VStack {
-        
-            HStack {
-                
-                //Circle().fill( selectedIndices.contains(2) ? Color.green : Color(.systemGray5)).frame(width: 10, height: 10, alignment: .center).padding(EdgeInsets.init(top: 2, leading: 0, bottom: 0, trailing: 0))
-                
-                Text(question.title).font(.title3).fontWeight(.semibold).foregroundColor(Color(.label)).opacity(0.8).padding(4)
-                Text("".appendingFormat("%i", selectedChoices.count)).opacity(0.5).frame(width: 1, height:1)
-                
-                //Spacer()
-                
-            }
-        
-            
-            
-            HStack {
-                
-            ForEach(question.choices, id: \.uuid) { choice in
-                
-                
-                Button(action: { selectChoice(choice) }, label: {
-                    
-                    Spacer()
-                    
-                    Text( choice.text )
-                        .font(.system(size: 14, weight: choice.selected ? .bold : .semibold)).multilineTextAlignment(.center)
-                        .foregroundColor( choice.selected ? Color(.label ) : Color(.label ).opacity(0.65) )
-                        
-                        .padding(2)
-                    
-                    Spacer()
-                    
-                    
-                })
-                .frame(width: 100, height: 40)
-                
-                .background(getColor(choice).opacity( choice.selected ? 0.25 : 0.1 ))
-                .cornerRadius(12)
-                .overlay(RoundedRectangle(cornerRadius: 12)
-                            .stroke( choice.selected ? getColor(choice) : getColor(choice).opacity(0.0), lineWidth: 2) )
-                .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
-                .padding(4)
-                
-                .opacity( (selectedChoices.count > 0 && !selectedChoices.contains(choice.uuid)) ? 0.5 : 1.0 )
-                
-                //.cornerRadius(28)
-                //.border(Color(.systemGray3), width: 1)
-                //.padding(EdgeInsets.init(top: 5, leading: 35, bottom: 12, trailing: 35))
-                //.border(Color.black)
-                
     
-                
-                
+    var body: some View {
+        VStack {
+            HStack {
+                Text(question.title)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color(.label))
+                    .opacity(0.8)
+                    .padding(4)
+                Text("".appendingFormat("%i", selectedChoices.count))
+                    .opacity(0.5)
+                    .frame(width: 1, height:1)
             }
-            }
-            
-        }
-//        .overlay(Rectangle().frame(width: 180, height: 1, alignment: .top).foregroundColor(Color(.systemGray5)), alignment: .top)
-
         
+            HStack {
+                ForEach(question.choices, id: \.uuid) { choice in
+                    Button(action: { selectChoice(choice) }, label: {
+                        Spacer()
+                        
+                        Text(choice.text)
+                            .font(.system(size: 14, weight: choice.selected ? .bold: .semibold)).multilineTextAlignment(.center)
+                            .foregroundColor(choice.selected ? Color(.label): Color(.label).opacity(0.65))
+                            
+                            .padding(2)
+                        
+                        Spacer()
+                    })
+                    .frame(width: 100, height: 40)
+                    .background(getColor(choice).opacity(choice.selected ? 0.25: 0.1))
+                    .cornerRadius(12)
+                    .overlay(RoundedRectangle(cornerRadius: 12)
+                                .stroke(choice.selected ? getColor(choice): getColor(choice).opacity(0.0), lineWidth: 2))
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                    .padding(4)
+                    .opacity((selectedChoices.count > 0 && !selectedChoices.contains(choice.uuid)) ? 0.5: 1.0)
+                }
+            }
+        }
     }
     
-    
-    func selectChoice( _ selectedChoice : MultipleChoiceResponse ) {
+    func selectChoice(_ selectedChoice: MultipleChoiceResponse) {
         // required to refresh the view ...
         // not sure how to do it automatically
         
-        // when new choice == choice in list :
+        // when new choice == choice in list:
         //  - if its in there, remove it
         //  - if not add it
         // else
         //  - only remove if multiple
         
-        
         if question.allowsMultipleSelection {
-
             assert(false) // TODO: fix
-
         } else {
-
             selectedChoices = []
             
             for choice in question.choices {
@@ -592,71 +510,52 @@ struct InlineMultipleChoiceQuestionView : View {
                 } else {
                     choice.selected = false;
                 }
-
             }
-
         }
-        
     }
-    
-    
 }
 
-
-
-
-struct MultipleChoiceResponseView : View {
+struct MultipleChoiceResponseView: View {
+    @ObservedObject var question: MultipleChoiceQuestion
+    @ObservedObject var choice: MultipleChoiceResponse
     
-    @ObservedObject var question : MultipleChoiceQuestion
-    @ObservedObject var choice : MultipleChoiceResponse
+    @Binding public var selectedIndices: Set<Int>
     
-    @Binding public var selectedIndices : Set<Int>
-    
-    var scrollProxy : ScrollViewProxy
+    var scrollProxy: ScrollViewProxy
     
     @State private var customTextEntry: String = ""
     
-    static let OtherTextFieldID : Int = 8919
+    static let OtherTextFieldID: Int = 8919
     
-    var body : some View {
-        
+    var body: some View {
         VStack {
-                        
-            
             Button(action: { selectChoice(choice) }, label: {
                 
-                Circle().fill(choice.selected ? Color.green : Color(.systemGray5)).frame(width: 30, height: 30, alignment: .center).padding(EdgeInsets.init(top: 0, leading: 20, bottom: 0, trailing: 0))
+                Circle().fill(choice.selected ? Color.green: Color(.systemGray5)).frame(width: 30, height: 30, alignment: .center).padding(EdgeInsets.init(top: 0, leading: 20, bottom: 0, trailing: 0))
                     .overlay(
                         choice.selected ?
                             Image(systemName: "checkmark").foregroundColor(.white)
                             .padding(EdgeInsets(top:0, leading: 20, bottom: 0, trailing: 0)): nil
                         
-                    )
+                   )
                     
-                Text( choice.text )
-                    .font( .title3)
-                    .fontWeight( choice.selected ? .bold : .regular )
-                    .foregroundColor( Color(.label ) )
+                Text(choice.text)
+                    .font(.title3)
+                    .fontWeight(choice.selected ? .bold: .regular)
+                    .foregroundColor(Color(.label))
                     .padding()
                 
 
                 Spacer()
-                
-                
             })
-            
-            
-            .cornerRadius(selectedIndices.count == 0 ? 28 : 28)
+            .cornerRadius(selectedIndices.count == 0 ? 28: 28)
             .overlay(RoundedRectangle(cornerRadius: 28)
-                        .stroke( choice.selected ? Color.green : Color(.systemGray5), lineWidth: 2) )
+                        .stroke(choice.selected ? Color.green: Color(.systemGray5), lineWidth: 2))
             .background(RoundedRectangle(cornerRadius: 28).fill(Color.white))
             .padding(EdgeInsets.init(top: 3, leading: 35, bottom: 3, trailing: 35))
             
-            
             if choice.allowsCustomTextEntry && choice.selected {
-                
                 HStack {
-                    
                     TextFieldWithDone(placeHolder:"Tap to Edit!", text: $customTextEntry, keyType: .default)
                         .onChange(of: customTextEntry) {
                             self.updateCustomText(choice, customTextEntry)
@@ -674,10 +573,7 @@ struct MultipleChoiceResponseView : View {
                                 }
                             }
                         })
-                    
                 }
-                
-                
                 .background(
                     RoundedCornersShape(corners: [.bottomLeft, .bottomRight], radius: 14, extraHeight: 22)
                         .fill(Color(.systemGray6), strokeBorder: Color(.systemGray2), lineWidth: 2)
@@ -687,25 +583,17 @@ struct MultipleChoiceResponseView : View {
                 .padding(EdgeInsets.init(top: 5, leading: 35, bottom: 12, trailing: 35))
                 .offset(y: -24.0)
                 .zIndex(-1)
-                
-                
-                
             }
-            
         }
-        
     }
     
-    
-    
-    func selectChoice( _ selectedChoice : MultipleChoiceResponse ) {
+    func selectChoice(_ selectedChoice: MultipleChoiceResponse) {
         // required to refresh the view ...
         // not sure how to do it automatically
         //selectedChoiceIndex = -1
         
         if question.allowsMultipleSelection {
-            
-            for (i,choice) in question.choices.enumerated() {
+            for (i, choice) in question.choices.enumerated() {
                 if selectedChoice.uuid == choice.uuid {
                     if selectedIndices.contains(i) {
                         selectedIndices.remove(i)
@@ -716,13 +604,9 @@ struct MultipleChoiceResponseView : View {
                         question.choices[i].selected = true;
                         selectedChoice.selected = true;
                     }
-                    
                 }
-                
             }
-            
         } else {
-            
             selectedIndices = []
             for (i,choice) in question.choices.enumerated() {
                 if selectedChoice.uuid == choice.uuid {
@@ -731,73 +615,60 @@ struct MultipleChoiceResponseView : View {
                 } else {
                     choice.selected = false;
                 }
-                
             }
-            
         }
         
-        if ( selectedChoice.allowsCustomTextEntry && selectedChoice.selected ) {
+        if (selectedChoice.allowsCustomTextEntry && selectedChoice.selected) {
             //self.scrollProxy.scrollTo(OtherTextFieldID)
         }
-        
-        
     }
     
-    func updateCustomText( _ selectedChoice : MultipleChoiceResponse, _ text : String ) {
-        
-        for (i,choice) in question.choices.enumerated() {
+    func updateCustomText(_ selectedChoice: MultipleChoiceResponse, _ text: String) {
+        for (i, choice) in question.choices.enumerated() {
             if selectedChoice.uuid == choice.uuid {
                 question.choices[i].customTextEntry = text
                 selectedChoice.customTextEntry = text
             }
         }
-        
     }
-    
 }
 
-struct MultipleChoiceQuestionView : View {
-    
-    @ObservedObject var question : MultipleChoiceQuestion
-    var scrollProxy : ScrollViewProxy
+struct MultipleChoiceQuestionView: View {
+    @ObservedObject var question: MultipleChoiceQuestion
+    var scrollProxy: ScrollViewProxy
     
     // @State hack required to update view it seems
-    @State var selectedIndices : Set<Int> = []
-    
+    @State var selectedIndices: Set<Int> = []
     @State private var customTextEntry: String = ""
-    
     
     var body: some View {
         VStack {
-                    
-        Text(question.title).font(.title).fontWeight(.bold).padding(EdgeInsets(top:14, leading: 16, bottom: 8, trailing: 16))
-            
-        if question.allowsMultipleSelection {
-            Text("Pick as many as you want").font(.title3).italic().foregroundColor(Color(.secondaryLabel))
-        }
-            
-        ForEach(question.choices, id: \.uuid) { choice in
-            
-            MultipleChoiceResponseView(question: question,
-                                       choice: choice,
-                                       selectedIndices: $selectedIndices,
-                                       scrollProxy: scrollProxy)
-            
-        } // end ForEach
-            
+            Text(question.title)
+                .font(.title)
+                .fontWeight(.bold)
+                .padding(EdgeInsets(top:14, leading: 16, bottom: 8, trailing: 16))
+                
+            if question.allowsMultipleSelection {
+                Text("Pick as many as you want").font(.title3).italic().foregroundColor(Color(.secondaryLabel))
+            }
+                
+            ForEach(question.choices, id: \.uuid) { choice in
+                MultipleChoiceResponseView(question: question,
+                                           choice: choice,
+                                           selectedIndices: $selectedIndices,
+                                           scrollProxy: scrollProxy)
+            }
         }
         .frame(maxWidth: .infinity) // stretch whole width
         .background(Color.white)
-        
     }
     
-    func selectChoice( _ selectedChoice : MultipleChoiceResponse ) {
+    func selectChoice(_ selectedChoice: MultipleChoiceResponse) {
         // required to refresh the view ...
         // not sure how to do it automatically
         //selectedChoiceIndex = -1
         if question.allowsMultipleSelection {
-            
-            for (i,choice) in question.choices.enumerated() {
+            for (i, choice) in question.choices.enumerated() {
                 if selectedChoice.uuid == choice.uuid {
                     if selectedIndices.contains(i) {
                         selectedIndices.remove(i)
@@ -808,13 +679,9 @@ struct MultipleChoiceQuestionView : View {
                         question.choices[i].selected = true;
                         selectedChoice.selected = true;
                     }
-                    
                 }
-                
             }
-            
         } else {
-            
             selectedIndices = []
             for (i,choice) in question.choices.enumerated() {
                 if selectedChoice.uuid == choice.uuid {
@@ -823,58 +690,46 @@ struct MultipleChoiceQuestionView : View {
                 } else {
                     choice.selected = false;
                 }
-                
             }
-            
         }
-        
     }
     
-    func updateCustomText( _ selectedChoice : MultipleChoiceResponse, _ text : String ) {
-        
-        for (i,choice) in question.choices.enumerated() {
+    func updateCustomText(_ selectedChoice: MultipleChoiceResponse, _ text: String) {
+        for (i, choice) in question.choices.enumerated() {
             if selectedChoice.uuid == choice.uuid {
                 question.choices[i].customTextEntry = text
                 selectedChoice.customTextEntry = text
             }
         }
-        
     }
-    
 }
 
-
-
-protocol SurveyViewDelegate : AnyObject {
-    func surveyCompleted( with survey : Survey )
+protocol SurveyViewDelegate: AnyObject {
+    func surveyCompleted(with survey: Survey)
     func surveyDeclined()
     func surveyRemindMeLater()
 }
 
 struct SurveyView: View {
+    @ObservedObject var survey: Survey
+    var delegate: SurveyViewDelegate?
     
-    @ObservedObject var survey : Survey
-    
-    @State var currentQuestion : Int = 0
+    @State var currentQuestion: Int = 0
     
     enum SurveyState {
         case showingIntroScreen
         case taking
         case complete
     }
-    
-    @State var surveyState : SurveyState = .showingIntroScreen
-    @State var processing = false
+    @State private var surveyState: SurveyState = .showingIntroScreen
+    @State private var processing = false
     
     @ObservedObject private var keyboard = KeyboardResponder()
     
-    var delegate : SurveyViewDelegate?
-    
-    init(survey: Survey, delegate : SurveyViewDelegate? = nil) {
+    init(survey: Survey, delegate: SurveyViewDelegate? = nil) {
         self.survey = survey
         self.delegate = delegate
     }
-    
     
     var body: some View {
         switch surveyState {
@@ -885,51 +740,73 @@ struct SurveyView: View {
                     Text("😀").font(.system(size: 100))
                 }.padding(EdgeInsets(top: 50, leading: 0, bottom: 20, trailing: 0))
                 
-                Text("Help us out?").font(.system(size: 45)).multilineTextAlignment(.center)
+                Text("Help us out?")
+                    .font(.system(size: 45))
+                    .multilineTextAlignment(.center)
               
-                Text("We could use your feedback").font(.title).padding(30).multilineTextAlignment(.center)
+                Text("We could use your feedback")
+                    .font(.title)
+                    .padding(30)
+                    .multilineTextAlignment(.center)
                 
-                Text("Please take this short survey, it would mean a lot!").font(.title2).padding(EdgeInsets(top: 0, leading: 40, bottom: 10, trailing: 45)).multilineTextAlignment(.center)
+                Text("Please take this short survey, it would mean a lot!")
+                    .font(.title2)
+                    .padding(EdgeInsets(top: 0, leading: 40, bottom: 10, trailing: 45))
+                    .multilineTextAlignment(.center)
                 
                 HStack {
-                    
-                    Button(action: { self.remindMeLaterTapped() }, label: {
-                        Text("Remind Me").foregroundColor(Color(.secondaryLabel)).bold().padding(15)
-                    }).buttonStyle(CustomButtonStyle(bgColor: Color(.systemGray5)))
+                    Button(action: { self.remindMeLaterTapped() }) {
+                        Text("Remind Me")
+                            .foregroundColor(Color(.secondaryLabel))
+                            .bold()
+                            .padding(15)
+                    }
+                    .buttonStyle(CustomButtonStyle(bgColor: Color(.systemGray5)))
                     .padding(5)
                 
-                    Button(action: { self.takeSurveyTapped() }, label: {
-                    Text("Take Survey").bold().padding(15)
-                    }).buttonStyle(CustomButtonStyle(bgColor: Color.blue))
+                    Button(action: { self.takeSurveyTapped() }) {
+                        Text("Take Survey")
+                            .bold()
+                            .padding(15)
+                    }
+                    .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
                     .padding(5)
-                                    
+                }
+                .padding()
                 
-                }.padding()
-                
-                Button(action: { self.noThanksTapped() }, label: {
+                Button(action: { self.noThanksTapped() }) {
                     Text("No Thanks")
-                }).padding()
+                }
+                .padding()
             }
         case .complete:
             VStack {
-                Text("👍").font(.system(size: 120)).padding(EdgeInsets(top: 60, leading: 0, bottom: 20, trailing: 0))
+                Text("👍")
+                    .font(.system(size: 120))
+                    .padding(EdgeInsets(top: 60, leading: 0, bottom: 20, trailing: 0))
                 
-                Text("Thanks!").font(.system(size: 45)).multilineTextAlignment(.center)
+                Text("Thanks!")
+                    .font(.system(size: 45))
+                    .multilineTextAlignment(.center)
               
-                Text("We really appreciate your feedback!").font(.title).padding(30).multilineTextAlignment(.center)
+                Text("We really appreciate your feedback!")
+                    .font(.title)
+                    .padding(30)
+                    .multilineTextAlignment(.center)
                 
                 ProgressView()
-                    .opacity( processing ? 1.0 : 0.0 )
+                    .opacity(processing ? 1.0: 0.0)
                 
-                Button(action: { submitSurveyTapped() }, label: {
+                Button(action: { submitSurveyTapped() }) {
                     Text("Submit Survey").bold()
-                }).buttonStyle(CustomButtonStyle(bgColor: Color.blue)).padding()
-                //.enabled( !self.processing )
-                
+                }
+                .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
+                .padding()
             
-                Button(action: { self.restartSurveyTapped() }, label: {
+                Button(action: { self.restartSurveyTapped() }) {
                     Text("Retake Survey")
-                }).padding()
+                }
+                .padding()
             }
         case .taking:
             VStack(spacing: 0) {
@@ -942,49 +819,53 @@ struct SurveyView: View {
                 ForEach(survey.questions.indices, id: \.self) { i in
                     if i == currentQuestion {
                         ScrollViewReader { proxy in
-                        ScrollView {
-                            if let question = survey.questions[currentQuestion] as? MultipleChoiceQuestion {
-                                MultipleChoiceQuestionView(question: question, scrollProxy: proxy )
-                            } else if let question = survey.questions[currentQuestion] as? BinaryQuestion {
-                                BinaryChoiceQuestionView(question: question, onChoiceMade: { nextTapped() })
-                            } else if let question = survey.questions[currentQuestion] as? ContactFormQuestion {
-                                ContactFormQuestionView(question: question)
-                            } else if let question = survey.questions[currentQuestion] as? CommentsFormQuestion {
-                                CommentsFormQuestionView(question: question)
-                            } else if let question = survey.questions[currentQuestion] as? InlineMultipleChoiceQuestionGroup {
-                                InlineMultipleChoiceQuestionGroupView(group: question)
+                            ScrollView {
+                                if let question = survey.questions[currentQuestion] as? MultipleChoiceQuestion {
+                                    MultipleChoiceQuestionView(question: question, scrollProxy: proxy)
+                                } else if let question = survey.questions[currentQuestion] as? BinaryQuestion {
+                                    BinaryChoiceQuestionView(question: question, onChoiceMade: { nextTapped() })
+                                } else if let question = survey.questions[currentQuestion] as? ContactFormQuestion {
+                                    ContactFormQuestionView(question: question)
+                                } else if let question = survey.questions[currentQuestion] as? CommentsFormQuestion {
+                                    CommentsFormQuestionView(question: question)
+                                } else if let question = survey.questions[currentQuestion] as? InlineMultipleChoiceQuestionGroup {
+                                    InlineMultipleChoiceQuestionGroupView(group: question)
+                                }
                             }
-                            // Space filling rect for extra scroll with transparent prev/next bar
-                            // Rectangle().fill(Color.clear).frame(width: 2, height: 2).id(bottomID)
-                        }
-                        .background(Color.white)
-                        .keyboardAware()
-                        .overlay(
-                            Rectangle()
-                                .frame(width: nil, height: 1, alignment: .top)
-                                .foregroundColor(Color(.systemGray4)),
-                            alignment: .top)
+                            .background(Color.white)
+                            .keyboardAware()
+                            .overlay( // simulating nav bar?
+                                Rectangle()
+                                    .frame(width: nil, height: 1, alignment: .top)
+                                    .foregroundColor(Color(.systemGray4)),
+                                alignment: .top)
                         }
                     }
                 }
                 
                 HStack() {
-                    Button(action: { previousTapped() }, label: {
-                        Text("Previous").foregroundColor(Color(.secondaryLabel)).bold()
-                    }).buttonStyle(CustomButtonStyle(bgColor: Color(.systemGray5)))
+                    Button(action: { previousTapped() }) {
+                        Text("Previous")
+                            .foregroundColor(Color(.secondaryLabel))
+                            .bold()
+                    }
+                    .buttonStyle(CustomButtonStyle(bgColor: Color(.systemGray5)))
                     
                     Spacer()
-                    Button(action: { nextTapped() }, label: {
-                        Text("Next").bold()
-                    }).buttonStyle(CustomButtonStyle(bgColor: Color.blue))
+                           
+                    Button(action: { nextTapped() }) {
+                        Text("Next")
+                            .bold()
+                    }
+                    .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
                                     
                 }
                 .padding(EdgeInsets(top: 12, leading: 22, bottom: 18, trailing: 22))
                 .background(Color(.systemGray6))
-                .edgesIgnoringSafeArea( [.leading, .trailing] )
+                .edgesIgnoringSafeArea([.leading, .trailing])
             }
             .background(Color.white)
-            .edgesIgnoringSafeArea( .bottom )
+            .edgesIgnoringSafeArea(.bottom)
         }
     }
     
@@ -994,22 +875,18 @@ struct SurveyView: View {
     
     func previousTapped() {
         var i = self.currentQuestion
-        
         while i > 0 {
             i = i - 1
-            
             let question = survey.questions[i]
             if question.isVisible(for: survey) {
                 self.currentQuestion = i
                 break
             }
         }
-        
     }
     
     func nextTapped() {
-        
-        if self.currentQuestion == survey.questions.count-1 {
+        if self.currentQuestion == survey.questions.count - 1 {
             // Survey done
             self.setSurveyComplete()
         } else {
@@ -1029,25 +906,18 @@ struct SurveyView: View {
     }
     
     func submitSurveyTapped() {
+        processing = true
         
-        self.processing = true
-        
-        var meta : [String : String] = [:]
-        
+        var meta: [String: String] = [:]
         #if DEBUG
         meta["debug"] = "true"
         #endif
-        
         meta["app_version"] = Bundle.main.releaseVersionNumber
         meta["build"] = Bundle.main.buildVersionNumber
-        
         survey.metadata = meta
+        delegate?.surveyCompleted(with: survey)
         
-        
-        self.delegate?.surveyCompleted(with: self.survey)
-        
-        self.processing = false
-        
+        processing = false
     }
     
     func takeSurveyTapped() {
@@ -1063,26 +933,16 @@ struct SurveyView: View {
     }
     
     func restartSurveyTapped() {
-        
         self.currentQuestion = 0
         self.surveyState = .taking
-        
     }
     
     func setSurveyComplete() {
-        
         self.surveyState = .complete
-        
-    }
-    
-}
-
-struct SurveyView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        SurveyView(survey: SampleSurvey).preferredColorScheme(.light)
-        
     }
 }
 
+#Preview {
+    SurveyView(survey: SurveyQuestions().sampleSurvey)
+        .preferredColorScheme(.light)
+}

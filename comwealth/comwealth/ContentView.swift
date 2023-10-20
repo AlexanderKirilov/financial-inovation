@@ -12,8 +12,8 @@ class SurveyDelegate: SurveyViewDelegate {
         let randomId = String(Int.random(in: 0...100))
         let surveyPath = "survey_filled_\(randomId).json"
         let jsonUrl = URL.documentsDirectory.appendingPathComponent(surveyPath)
-        try? Survey.SaveToFile(survey: survey, url: jsonUrl)
-        print( " Saved survey to: \n" , jsonUrl.path )
+        try? Survey.saveToFile(survey: survey, url: jsonUrl)
+        print("Saved survey to: \n" , jsonUrl.path)
     }
     
     func surveyDeclined() {
@@ -26,16 +26,15 @@ class SurveyDelegate: SurveyViewDelegate {
 }
 
 struct ContentView: View {
-    
     let delegate = SurveyDelegate()
-    var survey: Survey = SampleSurvey
+    var survey: Survey = SurveyQuestions().sampleSurvey
     
     init() {
         let jsonUrl = URL.documentsDirectory.appendingPathComponent("sample_survey.json")
-        try? Survey.SaveToFile(survey: survey, url: jsonUrl)
-        print("Saved survey to: \n", jsonUrl.path)
+        try? Survey.saveToFile(survey: survey, url: jsonUrl)
+        print("Saved survey to:\n", jsonUrl.path)
  
-        if let loadedSurvey = try? Survey.LoadFromFile(url: jsonUrl) {
+        if let loadedSurvey = try? Survey.loadFromFile(url: jsonUrl) {
             print("Loaded survey from:\n ", jsonUrl)
             survey = loadedSurvey
         }

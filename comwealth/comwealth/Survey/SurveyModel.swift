@@ -7,23 +7,19 @@
 
 import Foundation
 
+// MARK: - Data
 
 enum SurveyItemType: Int, Codable {
-    
     case multipleChoiceQuestion
     case binaryChoice
     case contactForm
     case inlineQuestionGroup
     case commentsForm
-    
 }
 
 final class Survey: ObservableObject, Codable {
-    
     @Published var questions: [SurveyQuestion]
-    
     let version: String
-    
     var metadata: [String:String]? // debugging stuff
     
     enum CodingKeys: CodingKey {
@@ -32,7 +28,7 @@ final class Survey: ObservableObject, Codable {
         case metadata
     }
     
-    init(_ questions: [SurveyQuestion], version: String) {
+    init(questions: [SurveyQuestion], version: String) {
         self.questions = questions
         self.version = version
         
@@ -45,11 +41,9 @@ final class Survey: ObservableObject, Codable {
             assert(!tags.contains(q.tag), "Duplicate tag found")
             tags.insert(q.tag)
         }
-        
     }
     
     init(from decoder: Decoder) throws {
-        
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.questions = try container.decode([SurveyItem].self, forKey: .questions).map({$0.question})
         self.version = try container.decode(String.self, forKey: .version)
@@ -85,24 +79,22 @@ final class Survey: ObservableObject, Codable {
         }
         return nil
     }
-    
 }
 
 final class SurveyItem: Codable {
-    
     let type: SurveyItemType
     let question: SurveyQuestion
     
     enum CodingKeys: CodingKey {
         case type, question
     }
+    
     init(question: SurveyQuestion) {
         self.question = question
         self.type = question.type
     }
     
     init(from decoder: Decoder) throws {
-        
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.type = try container.decode(SurveyItemType.self, forKey: .type)
         
@@ -122,7 +114,6 @@ final class SurveyItem: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
         try container.encode(self.type, forKey: .type)
         
         switch self.type {
@@ -137,10 +128,8 @@ final class SurveyItem: Codable {
         case .inlineQuestionGroup:
             try container.encode(self.question as! InlineMultipleChoiceQuestionGroup, forKey: .question)
         }
-        
     }
 }
-
 
 protocol SurveyQuestion: Codable {
     var title: String { get }
@@ -150,13 +139,10 @@ protocol SurveyQuestion: Codable {
     var type: SurveyItemType { get }
     var required: Bool { get set }
     var visibilityLogic: VisibilityLogic? { get set }
-    
 }
-
 
 extension SurveyQuestion {
     var type: SurveyItemType {
-        
         if self is MultipleChoiceQuestion {
             return .multipleChoiceQuestion
         } else if self is BinaryQuestion {
@@ -171,7 +157,6 @@ extension SurveyQuestion {
         
         assert(false) // fixme
         return .multipleChoiceQuestion // hmm
-        
     }
     
     func isVisible(for survey: Survey) -> Bool {
@@ -188,27 +173,21 @@ extension SurveyQuestion {
         new.visibilityLogic = VisibilityLogic(type: .choiceMustBeSelected, choiceId: response.uuid)
         return new
     }
+    
     func required() -> Self {
         var new = self
         new.required = true
         return new
     }
+    
     func optional() -> Self {
         var new = self
         new.required = false
         return new
     }
-//    func setTag(_ tag: String) -> Self {
-//        var new = self
-//        new.tag = tag
-//        return new
-//    }
-    
 }
 
-
 class InlineMultipleChoiceQuestionGroup: ObservableObject, SurveyQuestion {
-    
     let title: String
     let uuid: UUID
     var questions: [MultipleChoiceQuestion]
@@ -226,7 +205,6 @@ class InlineMultipleChoiceQuestionGroup: ObservableObject, SurveyQuestion {
 }
 
 class MultipleChoiceQuestion: ObservableObject, SurveyQuestion {
-    
     let title: String
     let uuid: UUID
     var choices: [MultipleChoiceResponse]
@@ -247,9 +225,10 @@ class MultipleChoiceQuestion: ObservableObject, SurveyQuestion {
     init(title: String, items: [Any], multiSelect: Bool = false, tag: String) {
         self.title = title
         self.uuid = UUID()
+        self.allowsMultipleSelection = multiSelect
+        self.tag = tag
         
         self.choices = []
-        
         for item in items {
             if let item2 = item as? String {
                 self.choices.append(MultipleChoiceResponse(item2))
@@ -257,10 +236,7 @@ class MultipleChoiceQuestion: ObservableObject, SurveyQuestion {
                 self.choices.append(item2)
             }
         }
-        self.allowsMultipleSelection = multiSelect
-        self.tag = tag
     }
-    
 }
 
 class MultipleChoiceResponse: ObservableObject, Codable {
@@ -279,15 +255,11 @@ class MultipleChoiceResponse: ObservableObject, Codable {
 }
 
 class BinaryQuestion: ObservableObject, SurveyQuestion {
-    
     let title: String
     let uuid: UUID
     var choices: [MultipleChoiceResponse]
-    
     var required: Bool = false
-    
     var visibilityLogic: VisibilityLogic?
-    
     var autoAdvanceOnChoice: Bool
     var tag: String
     
@@ -302,14 +274,9 @@ class BinaryQuestion: ObservableObject, SurveyQuestion {
 }
 
 class ContactFormQuestion: ObservableObject, SurveyQuestion {
-    
     let title: String
     let uuid: UUID
-    
-    //var choices: [MultipleChoiceResponse]
-    
     var required: Bool = false
-    
     var visibilityLogic: VisibilityLogic?
     var tag: String
     
@@ -324,19 +291,14 @@ class ContactFormQuestion: ObservableObject, SurveyQuestion {
         self.title = title
         self.uuid = UUID()
         self.tag = tag
-        //self.choices = answers.map({ MultipleChoiceResponse($0) })
-        //assert(self.choices.count == 2)
     }
 }
 
 class CommentsFormQuestion: ObservableObject, SurveyQuestion {
-    
     let title: String
     let subtitle: String
     let uuid: UUID
-    
     var required: Bool = false
-    
     var visibilityLogic: VisibilityLogic?
     var tag: String
     
@@ -350,27 +312,21 @@ class CommentsFormQuestion: ObservableObject, SurveyQuestion {
         self.subtitle = subtitle
         self.tag = tag
     }
-    
 }
 
-
-
-// Logic
+// MARK: - Logic
 
 class VisibilityLogic: Codable {
-    
     enum LogicType: Int, Codable {
         case choiceMustBeSelected
         case choiceMustNotBeSelected
     }
+    
     let type: LogicType
     let choiceId: UUID
+    
     init(type:LogicType, choiceId:UUID) {
         self.type = type
         self.choiceId = choiceId
     }
-    
 }
-
-
-

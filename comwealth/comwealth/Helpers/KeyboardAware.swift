@@ -13,16 +13,22 @@ public class KeyboardInfo: ObservableObject {
     @Published public var height: CGFloat = 0
 
     private init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardChanged), name: UIApplication.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardChanged), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardChanged), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardChanged), 
+                                               name: UIApplication.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardChanged),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardChanged),
+                                               name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
 
     @objc func keyboardChanged(notification: Notification) {
-        if notification.name == UIApplication.keyboardWillHideNotification {
-            self.height = 0
-        } else {
-            self.height = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height ?? 0
+        switch notification.name {
+        case UIApplication.keyboardWillHideNotification:
+            height = 0
+        default:
+            let keyboardRect = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+            let keyboardHeight = keyboardRect?.height ?? 0
+            height = keyboardHeight
         }
     }
 }
@@ -36,10 +42,6 @@ struct KeyboardAware: ViewModifier {
                 .padding(.bottom, self.keyboard.height)
                 .edgesIgnoringSafeArea(self.keyboard.height > 0 ? .bottom : [])
         }
-//        content
-//            .padding(.bottom, self.keyboard.height)
-//            .edgesIgnoringSafeArea(self.keyboard.height > 0 ? .bottom : [])
-//            .animation(.easeOut(duration: 0.16)
     }
 }
 

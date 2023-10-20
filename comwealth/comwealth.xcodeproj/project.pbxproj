@@ -16,6 +16,9 @@
 		11B472DF2AE2A2C2004A1CD2 /* SurveyQuestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472DE2AE2A2C2004A1CD2 /* SurveyQuestions.swift */; };
 		11B472E12AE2A2D7004A1CD2 /* SurveyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472E02AE2A2D7004A1CD2 /* SurveyHelper.swift */; };
 		11B472E32AE2A2E1004A1CD2 /* KeyboardAware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472E22AE2A2E1004A1CD2 /* KeyboardAware.swift */; };
+		11B472E62AE2C074004A1CD2 /* SuggestionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472E52AE2C074004A1CD2 /* SuggestionListView.swift */; };
+		11B472E82AE2C07F004A1CD2 /* SuggestionDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472E72AE2C07F004A1CD2 /* SuggestionDetailsView.swift */; };
+		11B472EB2AE2C09B004A1CD2 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472EA2AE2C09B004A1CD2 /* SummaryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +32,9 @@
 		11B472DE2AE2A2C2004A1CD2 /* SurveyQuestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyQuestions.swift; sourceTree = "<group>"; };
 		11B472E02AE2A2D7004A1CD2 /* SurveyHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyHelper.swift; sourceTree = "<group>"; };
 		11B472E22AE2A2E1004A1CD2 /* KeyboardAware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAware.swift; sourceTree = "<group>"; };
+		11B472E52AE2C074004A1CD2 /* SuggestionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionListView.swift; sourceTree = "<group>"; };
+		11B472E72AE2C07F004A1CD2 /* SuggestionDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionDetailsView.swift; sourceTree = "<group>"; };
+		11B472EA2AE2C09B004A1CD2 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +69,8 @@
 			children = (
 				11B472CA2AE29E36004A1CD2 /* ComwealthApp.swift */,
 				11B472CC2AE29E36004A1CD2 /* ContentView.swift */,
+				11B472E92AE2C089004A1CD2 /* Summary */,
+				11B472E42AE2C049004A1CD2 /* Suggestions */,
 				11B472D82AE29ED4004A1CD2 /* Survey */,
 				11B472D92AE29EE3004A1CD2 /* Helpers */,
 				11B472CE2AE29E37004A1CD2 /* Assets.xcassets */,
@@ -96,6 +104,23 @@
 				11B472E22AE2A2E1004A1CD2 /* KeyboardAware.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		11B472E42AE2C049004A1CD2 /* Suggestions */ = {
+			isa = PBXGroup;
+			children = (
+				11B472E52AE2C074004A1CD2 /* SuggestionListView.swift */,
+				11B472E72AE2C07F004A1CD2 /* SuggestionDetailsView.swift */,
+			);
+			path = Suggestions;
+			sourceTree = "<group>";
+		};
+		11B472E92AE2C089004A1CD2 /* Summary */ = {
+			isa = PBXGroup;
+			children = (
+				11B472EA2AE2C09B004A1CD2 /* SummaryView.swift */,
+			);
+			path = Summary;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,9 +195,12 @@
 			files = (
 				11B472DF2AE2A2C2004A1CD2 /* SurveyQuestions.swift in Sources */,
 				11B472E12AE2A2D7004A1CD2 /* SurveyHelper.swift in Sources */,
+				11B472E62AE2C074004A1CD2 /* SuggestionListView.swift in Sources */,
 				11B472CD2AE29E36004A1CD2 /* ContentView.swift in Sources */,
 				11B472CB2AE29E36004A1CD2 /* ComwealthApp.swift in Sources */,
+				11B472E82AE2C07F004A1CD2 /* SuggestionDetailsView.swift in Sources */,
 				11B472DB2AE2A274004A1CD2 /* SurveyView.swift in Sources */,
+				11B472EB2AE2C09B004A1CD2 /* SummaryView.swift in Sources */,
 				11B472E32AE2A2E1004A1CD2 /* KeyboardAware.swift in Sources */,
 				11B472DD2AE2A27D004A1CD2 /* SurveyModel.swift in Sources */,
 			);
@@ -310,11 +338,11 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Comwealth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = comwealth;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -338,11 +366,11 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Comwealth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = comwealth;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
