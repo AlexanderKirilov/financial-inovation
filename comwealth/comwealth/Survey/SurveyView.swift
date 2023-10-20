@@ -735,10 +735,12 @@ struct SurveyView: View {
     
     enum SurveyState {
         case showingIntroScreen
-        case taking
-        case complete
+        case takingSurvey
+        case suggestions
+        case complete // delete this later
     }
-    @State private var surveyState: SurveyState = .showingIntroScreen
+    
+    @State private var surveyState: SurveyState = .suggestions
     @State private var processing = false
     
     @ObservedObject private var keyboard = KeyboardResponder()
@@ -808,7 +810,9 @@ struct SurveyView: View {
                 }
                 .padding()
             }
-        case .taking:
+        case .suggestions:
+            SuggestionListView()
+        case .takingSurvey:
             VStack(spacing: 0) {
                 let questionTitle = "Question ".appendingFormat("%i / %i", currentQuestion + 1, self.survey.questions.count)
                 Text(questionTitle)
@@ -921,7 +925,7 @@ struct SurveyView: View {
     }
     
     func takeSurveyTapped() {
-        self.surveyState = .taking
+        self.surveyState = .takingSurvey
     }
     
     func noThanksTapped() {
@@ -934,7 +938,7 @@ struct SurveyView: View {
     
     func restartSurveyTapped() {
         self.currentQuestion = 0
-        self.surveyState = .taking
+        self.surveyState = .takingSurvey
     }
     
     func setSurveyComplete() {
