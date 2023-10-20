@@ -263,17 +263,31 @@ struct BinaryChoiceQuestionView: View {
             
             HStack {
                 Button(action: { selectChoice(0) }, label: {
-                    Text(question.choices[0].text).font(.title).bold()
+                    Text(question.choices[0].text)
+                        .font(.title3)
+                        .bold()
+                        .foregroundStyle(selectedIndices.contains(0) ? Color.accentColor: Color.gray)
                 })
-                .buttonStyle(YesNoButtonStyle(bgColor: selectedIndices.contains(0) ? Color.green: Color.gray))
+                .buttonStyle(YesNoButtonStyle(bgColor: Color.white))
                 .padding(6)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 28)
+                        .stroke(selectedIndices.contains(0) ? Color.accentColor: Color.gray, lineWidth: 2)
+                )
+//                .background(RoundedRectangle(cornerRadius: 28).fill(Color.white))
                 
                 
                 Button(action: { selectChoice(1) }, label: {
-                    Text(question.choices[1].text).font(.title)
+                    Text(question.choices[1].text)
+                        .font(.title3)
+                        .foregroundStyle(selectedIndices.contains(1) ? Color.accentColor: Color.gray)
                 })
-                .buttonStyle(YesNoButtonStyle(bgColor: selectedIndices.contains(1) ? Color.green: Color.gray))
+                .buttonStyle(YesNoButtonStyle(bgColor: Color.white))
                 .padding(6)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 28)
+                        .stroke(selectedIndices.contains(1) ? Color.accentColor: Color.gray, lineWidth: 2)
+                )
             }
             .padding(EdgeInsets(top: 40, leading: 20, bottom: 20, trailing: 20))
         }.onAppear {
@@ -531,7 +545,10 @@ struct MultipleChoiceResponseView: View {
         VStack {
             Button(action: { selectChoice(choice) }, label: {
                 
-                Circle().fill(choice.selected ? Color.green: Color(.systemGray5)).frame(width: 30, height: 30, alignment: .center).padding(EdgeInsets.init(top: 0, leading: 20, bottom: 0, trailing: 0))
+                Circle()
+                    .fill(choice.selected ? Color.accentColor: Color(.systemGray5))
+                    .frame(width: 30, height: 30, alignment: .center)
+                    .padding(EdgeInsets.init(top: 0, leading: 20, bottom: 0, trailing: 0))
                     .overlay(
                         choice.selected ?
                             Image(systemName: "checkmark").foregroundColor(.white)
@@ -550,7 +567,7 @@ struct MultipleChoiceResponseView: View {
             })
             .cornerRadius(selectedIndices.count == 0 ? 28: 28)
             .overlay(RoundedRectangle(cornerRadius: 28)
-                        .stroke(choice.selected ? Color.green: Color(.systemGray5), lineWidth: 2))
+                        .stroke(choice.selected ? Color.accentColor: Color(.systemGray5), lineWidth: 2))
             .background(RoundedRectangle(cornerRadius: 28).fill(Color.white))
             .padding(EdgeInsets.init(top: 3, leading: 35, bottom: 3, trailing: 35))
             
@@ -737,46 +754,29 @@ struct SurveyView: View {
             VStack { // TODO: break out into IntroView
                 HStack {
                     Text("👋").font(.system(size: 80))
-                    Text("😀").font(.system(size: 100))
+                    Text("🤑").font(.system(size: 100))
                 }.padding(EdgeInsets(top: 50, leading: 0, bottom: 20, trailing: 0))
                 
-                Text("Help us out?")
+                Text("Wanna get rich?")
                     .font(.system(size: 45))
                     .multilineTextAlignment(.center)
               
-                Text("We could use your feedback")
+                Text("You wanna get rich,\n but you're not in a hurry?")
                     .font(.title)
                     .padding(30)
                     .multilineTextAlignment(.center)
                 
-                Text("Please take this short survey, it would mean a lot!")
+                Text("You're at the right place!")
                     .font(.title2)
                     .padding(EdgeInsets(top: 0, leading: 40, bottom: 10, trailing: 45))
                     .multilineTextAlignment(.center)
                 
-                HStack {
-                    Button(action: { self.remindMeLaterTapped() }) {
-                        Text("Remind Me")
-                            .foregroundColor(Color(.secondaryLabel))
-                            .bold()
-                            .padding(15)
-                    }
-                    .buttonStyle(CustomButtonStyle(bgColor: Color(.systemGray5)))
-                    .padding(5)
-                
-                    Button(action: { self.takeSurveyTapped() }) {
-                        Text("Take Survey")
-                            .bold()
-                            .padding(15)
-                    }
-                    .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
-                    .padding(5)
+                Button(action: { self.takeSurveyTapped() }) {
+                    Text("GET RICH NOT QUICK")
+                        .bold()
+                        .padding(15)
                 }
-                .padding()
-                
-                Button(action: { self.noThanksTapped() }) {
-                    Text("No Thanks")
-                }
+                .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
                 .padding()
             }
         case .complete:

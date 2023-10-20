@@ -51,9 +51,9 @@ struct SurveyQuestions {
     var sampleSurvey: Survey {
         return Survey(
             questions: [
+                contactUs,
                 primaryUse,
                 newFeatures,
-                contactUs,
                 contactForm.setVisibleWhenSelected(contactUs.choices.first!),
                 comments,
                 commentsForm.setVisibleWhenSelected(comments.choices.first!),
