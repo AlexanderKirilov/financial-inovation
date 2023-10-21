@@ -265,8 +265,8 @@ struct BinaryChoiceQuestionView: View {
                 Button(action: { selectChoice(0) }, label: {
                     Text(question.choices[0].text)
                         .font(.title3)
-                        .bold()
-                        .foregroundStyle(selectedIndices.contains(0) ? Color.accentColor: Color.gray)
+                        .fontWeight(selectedIndices.contains(0) ? .bold : .regular)
+                        .foregroundStyle(selectedIndices.contains(0) ? Color.accentColor : Color.gray)
                 })
                 .buttonStyle(YesNoButtonStyle(bgColor: Color.white))
                 .padding(6)
@@ -276,11 +276,11 @@ struct BinaryChoiceQuestionView: View {
                 )
 //                .background(RoundedRectangle(cornerRadius: 28).fill(Color.white))
                 
-                
                 Button(action: { selectChoice(1) }, label: {
                     Text(question.choices[1].text)
                         .font(.title3)
-                        .foregroundStyle(selectedIndices.contains(1) ? Color.accentColor: Color.gray)
+                        .fontWeight(selectedIndices.contains(1) ? .bold : .regular)
+                        .foregroundStyle(selectedIndices.contains(1) ? Color.accentColor : Color.gray)
                 })
                 .buttonStyle(YesNoButtonStyle(bgColor: Color.white))
                 .padding(6)
@@ -574,8 +574,8 @@ struct MultipleChoiceResponseView: View {
             if choice.allowsCustomTextEntry && choice.selected {
                 HStack {
                     TextFieldWithDone(placeHolder:"Tap to Edit!", text: $customTextEntry, keyType: .default)
-                        .onChange(of: customTextEntry) {
-                            self.updateCustomText(choice, customTextEntry)
+                        .onChange(of: customTextEntry) { newValue in
+                            self.updateCustomText(choice, newValue)
                         }
                         .padding(EdgeInsets(top: 16, leading: 10, bottom: 3, trailing: 10))
                         .foregroundColor(Color(.systemGray2))
@@ -734,13 +734,13 @@ struct SurveyView: View {
     @State var currentQuestion: Int = 0
     
     enum SurveyState {
-        case showingIntroScreen
-        case takingSurvey
+        case onboarding
+        case survey
         case suggestions
-        case complete // delete this later
+        case summary
     }
     
-    @State private var surveyState: SurveyState = .suggestions
+    @State private var surveyState: SurveyState = .onboarding
     @State private var processing = false
     
     @ObservedObject private var keyboard = KeyboardResponder()
@@ -752,8 +752,8 @@ struct SurveyView: View {
     
     var body: some View {
         switch surveyState {
-        case .showingIntroScreen:
-            VStack { // TODO: break out into IntroView
+        case .onboarding:
+            VStack { // TODO: break out into Onboarding View
                 HStack {
                     Text("👋").font(.system(size: 80))
                     Text("🤑").font(.system(size: 100))
@@ -781,8 +781,8 @@ struct SurveyView: View {
                 .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
                 .padding()
             }
-        case .complete:
-            VStack {
+        case .summary:
+            VStack { // TODO: break out into SummaryView
                 Text("👍")
                     .font(.system(size: 120))
                     .padding(EdgeInsets(top: 60, leading: 0, bottom: 20, trailing: 0))
@@ -812,7 +812,7 @@ struct SurveyView: View {
             }
         case .suggestions:
             SuggestionListView()
-        case .takingSurvey:
+        case .survey:
             VStack(spacing: 0) {
                 let questionTitle = "Question ".appendingFormat("%i / %i", currentQuestion + 1, self.survey.questions.count)
                 Text(questionTitle)
@@ -925,7 +925,7 @@ struct SurveyView: View {
     }
     
     func takeSurveyTapped() {
-        self.surveyState = .takingSurvey
+        self.surveyState = .survey
     }
     
     func noThanksTapped() {
@@ -938,11 +938,11 @@ struct SurveyView: View {
     
     func restartSurveyTapped() {
         self.currentQuestion = 0
-        self.surveyState = .takingSurvey
+        self.surveyState = .onboarding
     }
     
     func setSurveyComplete() {
-        self.surveyState = .complete
+        self.surveyState = .suggestions
     }
 }
 
