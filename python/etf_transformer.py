@@ -103,32 +103,64 @@ etf_valid_rows = etf_valid_rows.reset_index()
 print(etf_valid_rows)
 
 
-# In[157]:
+# In[158]:
 
 
 # Join both datasets
 
 
 joined_etf = etf_valid_rows.merge(merged_df,left_on='ticker', right_on='symbol')
+joined_etf
 print(joined_etf)
+joined_etf.to_csv("ETFs_formatted.csv")
 
 
-# In[121]:
+# In[187]:
 
-##TODO: Implement Euclidean distances calculation
-# # Calculate Euclidean distances
-# distances = []
-# for idx, row in df.iterrows():
-#     if row['ETF_ID'] != 1:  # Exclude the reference ETF
-#         dist = distance.euclidean(reference_etf[['Column1', 'Column2']], row[['Column1', 'Column2']])
-#         distances.append({'ETF_ID': row['ETF_ID'], 'Distance': dist})
 
-# # Create a DataFrame from the distances
-# dist_df = pd.DataFrame(distances)
+# Calculate Euclidean distances
 
-# # Sort by distance in ascending order
-# sorted_dist_df = dist_df.sort_values(by='Distance')
+def calcDistances(input_df,reference_df):
+    
+    distances = []
+    for idx, row in reference_df.iterrows():
+              # Exclude the reference ETF
+        dist = distance.euclidean(input_df[['3 Year', 'yield_db', 'ytdReturn', 'energy',
+                                            'financial_services', 'healthcare', 'industrials',
+                                            'realestate', 'technology', 'utilities', 'meanAnnualReturn', 'standardDeviation']], 
+                                  row[['3 Year', 'yield_db', 'ytdReturn', 'energy',
+                                        'financial_services', 'healthcare', 'industrials',
+                                        'realestate', 'technology', 'utilities', 'meanAnnualReturn', 'standardDeviation']])
+        distances.append({'ETF_ID': row['ticker'], 'Distance': dist})
 
-# # Get the top 5 results (lowest distances)
-# top_5_results = sorted_dist_df.head(5)
+# Create a DataFrame from the distances
+    dist_df = pd.DataFrame(distances)
+
+# Sort by distance in ascending order
+    sorted_dist_df = dist_df.sort_values(by='Distance')
+    return sorted_dist_df
+
+# Get the top 5 results (lowest distances)
+
+
+# In[191]:
+
+
+example_data = {'3 Year': 0.07,
+                'yield_db': 0.025,
+                'ytdReturn': 0.08,
+                'energy': 0.0,
+                'financial_services': 0.50 ,
+                'healthcare': 0.18,
+                'industrials': 0.1,
+                'realestate': 0.12,
+                'technology': 0.02,
+                'utilities': 0.08,
+                'meanAnnualReturn': 0.07,
+                'standardDeviation': 0.22}
+
+vector_df=pd.DataFrame([example_data])
+top_5_results = calcDistances(vector_df, joined_etf)
+
+print(top_5_results)
 
