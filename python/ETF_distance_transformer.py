@@ -152,10 +152,10 @@ top_5_results.to_csv("distances_sorted.csv")
 
 # In[ ]:
 
-
-def get_sector_weightings(answer):
+### NOT TESTED
+def get_sector_weightings(selected_sectors):
        # Determine the number of selected sectors
-    num_selected_sectors = len(answer)
+    num_selected_sectors = len(selected_sectors)
 
     # Calculate the weight for each selected sector
     sector_weight = 0.2 if num_selected_sectors > 0 else 0.0
@@ -165,10 +165,9 @@ def get_sector_weightings(answer):
         sector_weights[sector] = sector_weight
 
     # Create a new dictionary with non-zero weights
-    non_zero_weights = {sector: weight for sector, weight in sector_weights.items() if weight != 0.0}
+    non_zero_weights = {sector: weight for sector, weight in selected_sectors.items() if weight != 0.0}
 
     return non_zero_weights
-
 
 def get_vector_from_answers(answers):
     
@@ -189,7 +188,7 @@ def get_vector_from_answers(answers):
         'age': {'A': 0.3, 'B': 0.15, 'C': 0.09, 'D': 0.02},
         'finance-risk': {'A': 17.13, 'B': 19.5, 'C': 22.3, 'D': 26},
         'expected-return': {'A': 0.04, 'B': 0.06, 'C': 0.08, 'D': 0.11},
-        'sustainability': {'A': 0.86, 'B': 0.75, 'C': 0.60, 'D': 0.55},
+        'sustainability': {'A': 0.86, 'B': 0.75, 'C': 0.60, 'D': 0.55}
         # Define mappings for other questions here
     }
     
@@ -233,6 +232,7 @@ def calcDistances(input_df,reference_df):
 
 
 #Read from stdin to get answers
+### NOT TESTED
 def read_from_stdin:
     answers = {}
     for column in columns:
