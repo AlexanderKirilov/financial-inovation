@@ -945,8 +945,3 @@ struct SurveyView: View {
         self.surveyState = .suggestions
     }
 }
-
-#Preview {
-    SurveyView(survey: SurveyQuestions().sampleSurvey)
-        .preferredColorScheme(.light)
-}

@@ -141,13 +141,13 @@ struct SuggestionListView: View {
         .chartYAxis(.hidden)
 //        .chartLegend(.hidden)
         .chartLegend(position: .bottomLeading, alignment: .bottom)
-        .chartForegroundStyleScale(domain: [data.first!.name, data.last!.name], range: [.accent, .coral])
+        .chartForegroundStyleScale(domain: [data.first!.name, data.last!.name], range: [Color.accentColor, Color.coral])
         .frame(height: 300)
     }
     
     private func areaChart(for data: [DataPoint]) -> some View {
-        let startColor = Color(.accent)
-        let endColor = Color(.turquoise).opacity(0)
+        let startColor = Color.accentColor
+        let endColor = Color.turquoise.opacity(0)
         let gradient = LinearGradient(
             stops: [
                 Gradient.Stop(color: startColor, location: 0),
@@ -171,14 +171,10 @@ struct SuggestionListView: View {
             )
             .lineStyle(StrokeStyle(lineWidth: 2.0))
             .interpolationMethod(.cardinal)
-            .foregroundStyle(.accent)
+            .foregroundStyle(Color.accentColor)
         }
         .chartYAxis(.hidden)
         .chartXAxis(.hidden)
         .frame(height: 300)
     }
-}
-
-#Preview {
-    SuggestionListView()
 }

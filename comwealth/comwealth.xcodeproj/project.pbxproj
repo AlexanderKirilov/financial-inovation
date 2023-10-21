@@ -19,6 +19,7 @@
 		11B472E62AE2C074004A1CD2 /* SuggestionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472E52AE2C074004A1CD2 /* SuggestionListView.swift */; };
 		11B472E82AE2C07F004A1CD2 /* SuggestionDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472E72AE2C07F004A1CD2 /* SuggestionDetailsView.swift */; };
 		11B472EB2AE2C09B004A1CD2 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472EA2AE2C09B004A1CD2 /* SummaryView.swift */; };
+		783C25AC2AE3C915004A47F6 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783C25AB2AE3C915004A47F6 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		11B472E52AE2C074004A1CD2 /* SuggestionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionListView.swift; sourceTree = "<group>"; };
 		11B472E72AE2C07F004A1CD2 /* SuggestionDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionDetailsView.swift; sourceTree = "<group>"; };
 		11B472EA2AE2C09B004A1CD2 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		783C25AB2AE3C915004A47F6 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Color.swift; path = comwealth/Helpers/Color.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 			children = (
 				11B472E02AE2A2D7004A1CD2 /* SurveyHelper.swift */,
 				11B472E22AE2A2E1004A1CD2 /* KeyboardAware.swift */,
+				783C25AB2AE3C915004A47F6 /* Color.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -158,7 +161,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 11B472C22AE29E36004A1CD2 /* Build configuration list for PBXProject "Comwealth" */;
+			buildConfigurationList = 11B472C22AE29E36004A1CD2 /* Build configuration list for PBXProject "comwealth" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -195,6 +198,7 @@
 			files = (
 				11B472DF2AE2A2C2004A1CD2 /* SurveyQuestions.swift in Sources */,
 				11B472E12AE2A2D7004A1CD2 /* SurveyHelper.swift in Sources */,
+				783C25AC2AE3C915004A47F6 /* Color.swift in Sources */,
 				11B472E62AE2C074004A1CD2 /* SuggestionListView.swift in Sources */,
 				11B472CD2AE29E36004A1CD2 /* ContentView.swift in Sources */,
 				11B472CB2AE29E36004A1CD2 /* ComwealthApp.swift in Sources */,
@@ -389,7 +393,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		11B472C22AE29E36004A1CD2 /* Build configuration list for PBXProject "Comwealth" */ = {
+		11B472C22AE29E36004A1CD2 /* Build configuration list for PBXProject "comwealth" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				11B472D32AE29E37004A1CD2 /* Debug */,
