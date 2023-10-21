@@ -27,19 +27,38 @@ struct SuggestionView: View {
     }
 }
 
+struct TickerImage: View {
+    let ticker: Ticker
+    @Binding var hasAppeared: Bool
+    
+    var body: some View {
+        if #available(iOS 17.0, *) {
+            ticker.image
+                .frame(width: 32, height: 32)
+                .foregroundColor(.white) // change to .accentColor
+                .background(Color.accentColor.opacity(0.5))
+                .clipShape(Circle())
+                .symbolEffect(.bounce, value: hasAppeared)
+        } else {
+            ticker.image
+                .frame(width: 32, height: 32)
+                .foregroundColor(.white) // change to .accentColor
+                .background(Color.accentColor.opacity(0.5))
+                .clipShape(Circle())
+        }
+    }
+}
+
 struct TickerDetailsView: View {
     let ticker: Ticker
+    @State private var hasAppeared: Bool = false
     
     var body: some View {
         VStack {
             HStack {
                 VStack {
                     HStack {
-                        ticker.image
-                            .frame(width: 32, height: 32)
-                            .foregroundColor(.white) // change to .accentColor
-                            .background(Color.accentColor.opacity(0.5))
-                            .clipShape(Circle())
+                        TickerImage(ticker: ticker, hasAppeared: $hasAppeared)
                         
                         Text(ticker.symbol)
                             .font(.title2)
@@ -48,6 +67,9 @@ struct TickerDetailsView: View {
                         Spacer()
                     }
                     .frame(height: 32)
+                    .onAppear {
+                        hasAppeared = true
+                    }
                     
                     HStack {
                         Text(ticker.displayName)
