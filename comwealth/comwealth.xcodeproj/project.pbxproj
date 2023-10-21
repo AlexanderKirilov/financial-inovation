@@ -22,6 +22,7 @@
 		11DA68DD2AE3E7C100D4EB69 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DA68DC2AE3E7C100D4EB69 /* ChartView.swift */; };
 		11DA68DF2AE41F9700D4EB69 /* SuggestionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DA68DE2AE41F9700D4EB69 /* SuggestionModel.swift */; };
 		11DA68E12AE41FCA00D4EB69 /* SuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DA68E02AE41FCA00D4EB69 /* SuggestionView.swift */; };
+		11DA68E32AE4777900D4EB69 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DA68E22AE4777900D4EB69 /* API.swift */; };
 		783C25AC2AE3C915004A47F6 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783C25AB2AE3C915004A47F6 /* Color.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		11DA68DC2AE3E7C100D4EB69 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		11DA68DE2AE41F9700D4EB69 /* SuggestionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionModel.swift; sourceTree = "<group>"; };
 		11DA68E02AE41FCA00D4EB69 /* SuggestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionView.swift; sourceTree = "<group>"; };
+		11DA68E22AE4777900D4EB69 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		783C25AB2AE3C915004A47F6 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Color.swift; path = comwealth/Helpers/Color.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 				11B472E02AE2A2D7004A1CD2 /* SurveyHelper.swift */,
 				11B472E22AE2A2E1004A1CD2 /* KeyboardAware.swift */,
 				783C25AB2AE3C915004A47F6 /* Color.swift */,
+				11DA68E22AE4777900D4EB69 /* API.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 				11B472DF2AE2A2C2004A1CD2 /* SurveyQuestions.swift in Sources */,
 				11B472E12AE2A2D7004A1CD2 /* SurveyHelper.swift in Sources */,
 				783C25AC2AE3C915004A47F6 /* Color.swift in Sources */,
+				11DA68E32AE4777900D4EB69 /* API.swift in Sources */,
 				11B472E62AE2C074004A1CD2 /* SuggestionListView.swift in Sources */,
 				11B472CD2AE29E36004A1CD2 /* ContentView.swift in Sources */,
 				11B472CB2AE29E36004A1CD2 /* ComwealthApp.swift in Sources */,

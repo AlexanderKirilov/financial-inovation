@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct SuggestionListView: View {
+    private let survey: Survey
     @State private var suggestions: [Ticker]
     @State private var isLoading: Bool = false
     
-    init(suggestions: [Ticker] = []) {
+    init(survey: Survey = SurveyQuestions.shared.preferencesSurvey, suggestions: [Ticker] = []) {
+        self.survey = survey
         self.suggestions = suggestions
+        print(survey)
     }
     
     var body: some View {
@@ -51,15 +54,23 @@ struct SuggestionListView: View {
             
             print("🛜 Gotta do the fetching n shit")
             isLoading = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            API.fetchSuggestions(for: survey) { result in
                 isLoading = false
-                suggestions = [Ticker.sample, Ticker.sample, Ticker.sample]
+                switch result {
+                case .success(let data):
+                    print("✅ OPAAAAAAA")
+                    let response = try? JSONDecoder().decode(SuggestionResponse.self, from: data)
+                    suggestions = [Ticker.sample, Ticker.sample, Ticker.sample]
+                case .failure(let error):
+                    print("❌ OPAAAAAAA")
+                    suggestions = []
+                }
             }
         }
     }
     
     private func continueTapped() {
-        
+        print("✅ Show detail screen")
     }
 }
 

@@ -59,7 +59,7 @@ struct Ticker: Identifiable {
     let performancePercentage: Double
     let chartPoints: [DataPoint]
     
-    var id: String { symbol }
+    var id: String { UUID().uuidString }
     var image: Image { sector.image }
     var displayName: String { longName ?? symbol }
     var displayPerformance: String { "+\(String(format: "%.2f", performancePercentage))%" }
@@ -73,3 +73,18 @@ struct Ticker: Identifiable {
                                performancePercentage: 1.02,
                                chartPoints: ChartData.last30Days.first!.points)
 }
+
+//struct SuggestionResponse: Codable {
+//    struct ResponseData {
+//        let etfs: [Ticker]
+//    }
+//    
+//    let status: String
+//    let data: ResponseData
+//    
+//    init(from decoder: Decoder) throws {
+//        // add parsing here
+//        self.status = "success"
+//        self.data = ResponseData(etfs: [])
+//    }
+//}

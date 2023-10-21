@@ -828,7 +828,7 @@ struct SurveyView: View {
                 .padding()
             }
         case .suggestions:
-            SuggestionListView()
+            SuggestionListView(survey: survey)
         case .survey:
             VStack(spacing: 0) {
                 let questionTitle = "Question ".appendingFormat("%i / %i", currentQuestion + 1, self.survey.questions.count)
