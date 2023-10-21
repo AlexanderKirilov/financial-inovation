@@ -116,46 +116,6 @@ print(joined_etf)
 joined_etf.to_csv("ETFs_formatted.csv")
 
 
-# In[ ]:
-
-
-#Read from stdin to get answers
-def read_from_stdin:
-    answers = {}
-    for column in columns:
-        answer = input()
-        answers[column] = answer
-
-# Append the answers as a new row to the DataFrame
-    
-    return answers
-
-
-# In[187]:
-
-
-# Calculate Euclidean distances
-
-def calcDistances(input_df,reference_df):
-    
-    distances = []
-    for idx, row in reference_df.iterrows():
-              # Exclude the reference ETF
-        dist = distance.euclidean(input_df[['3 Year', 'yield_db', 'ytdReturn', 'energy', ''
-                                            'financial_services', 'healthcare', 'industrials',
-                                            'realestate', 'technology', 'utilities', 'meanAnnualReturn', 'standardDeviation']], 
-                                  row[['3 Year', 'yield_db', 'ytdReturn', 'energy',
-                                        'financial_services', 'healthcare', 'industrials',
-                                        'realestate', 'technology', 'utilities', 'meanAnnualReturn', 'standardDeviation']])
-        distances.append({'ETF_ID': row['ticker'], 'Distance': dist})
-
-# Create a DataFrame from the distances
-    dist_df = pd.DataFrame(distances)
-
-# Sort by distance in ascending order
-    sorted_dist_df = dist_df.sort_values(by='Distance')
-    return sorted_dist_df
-
 # Get the top 5 results (lowest distances)
 
 
@@ -186,6 +146,28 @@ top_5_results.to_csv("distances_sorted.csv")
 
 
 # In[ ]:
+
+
+
+
+# In[ ]:
+
+
+def get_sector_weightings(answer):
+       # Determine the number of selected sectors
+    num_selected_sectors = len(answer)
+
+    # Calculate the weight for each selected sector
+    sector_weight = 0.2 if num_selected_sectors > 0 else 0.0
+
+    # Update the weights for selected sectors
+    for sector in selected_sectors:
+        sector_weights[sector] = sector_weight
+
+    # Create a new dictionary with non-zero weights
+    non_zero_weights = {sector: weight for sector, weight in sector_weights.items() if weight != 0.0}
+
+    return non_zero_weights
 
 
 def get_vector_from_answers(answers):
@@ -228,24 +210,35 @@ def get_vector_from_answers(answers):
     
     return vector_df
 
+#Calculate euclidian distances
+def calcDistances(input_df,reference_df):
+    
+    distances = []
+    for idx, row in reference_df.iterrows():
+              # Exclude the reference ETF
+        dist = distance.euclidean(input_df[['3 Year', 'yield_db', 'ytdReturn', 'energy', ''
+                                            'financial_services', 'healthcare', 'industrials',
+                                            'realestate', 'technology', 'utilities', 'meanAnnualReturn', 'standardDeviation']], 
+                                  row[['3 Year', 'yield_db', 'ytdReturn', 'energy',
+                                        'financial_services', 'healthcare', 'industrials',
+                                        'realestate', 'technology', 'utilities', 'meanAnnualReturn', 'standardDeviation']])
+        distances.append({'ETF_ID': row['ticker'], 'Distance': dist})
 
-# In[ ]:
+# Create a DataFrame from the distances
+    dist_df = pd.DataFrame(distances)
+
+# Sort by distance in ascending order
+    sorted_dist_df = dist_df.sort_values(by='Distance')
+    return sorted_dist_df
 
 
-def get_sector_weightings(answer):
-       # Determine the number of selected sectors
-    num_selected_sectors = len(answer)
+#Read from stdin to get answers
+def read_from_stdin:
+    answers = {}
+    for column in columns:
+        answer = input()
+        answers[column] = answer
 
-    # Calculate the weight for each selected sector
-    sector_weight = 0.2 if num_selected_sectors > 0 else 0.0
-
-    # Update the weights for selected sectors
-    for sector in selected_sectors:
-        sector_weights[sector] = sector_weight
-
-    # Create a new dictionary with non-zero weights
-    non_zero_weights = {sector: weight for sector, weight in sector_weights.items() if weight != 0.0}
-
-    return non_zero_weights
-
-
+# Append the answers as a new row to the DataFrame
+    
+    return answers
