@@ -13,107 +13,101 @@ import csv
 import sys
 
 # Load data from separate CSV files
-general_details_df = pd.read_csv('etf_details.csv', sep=',')
-sector_weightings_df = pd.read_csv('sector_weightings.csv', sep=',')
-risk_statistics_df = pd.read_csv('risk_statistics.csv', sep=',')
-etf_db_df = pd.read_csv('ETFDB.csv', sep=',')
 
-# pivot_df = sector_weightings_df.reset_index()
-print(general_details_df)
-pivot_df = sector_weightings_df.pivot(index='stock_id', columns='name', values='percent')
-pivot_df.reset_index()
-# Reset index
+def main():
+    general_details_df = pd.read_csv('etf_details.csv', sep=',')
+    sector_weightings_df = pd.read_csv('sector_weightings.csv', sep=',')
+    risk_statistics_df = pd.read_csv('risk_statistics.csv', sep=',')
+    etf_db_df = pd.read_csv('ETFDB.csv', sep=',')
 
-# Merge DataFrames using 'stock_id' as the key
-merged_df = general_details_df.merge(pivot_df, left_on='id', right_on='stock_id',how='inner')
-merged_df = merged_df.merge(risk_statistics_df, left_on='id', right_on='stock_id')
-# # Filter ETFs with low stock position (adjust the threshold as needed)
-# low_stock_threshold = 0.1
-# filtered_df = merged_df[merged_df['stockPosition'] < low_stock_threshold]
+    # pivot_df = sector_weightings_df.reset_index()
+    print(general_details_df)
+    pivot_df = sector_weightings_df.pivot(index='stock_id', columns='name', values='percent')
+    pivot_df.reset_index()
+    # Reset index
 
-# # Find the ETF with the highest yield among the filtered ETFs
-# selected_etf = filtered_df.loc[filtered_df['yield'].idxmax()]
+    # Merge DataFrames using 'stock_id' as the key
+    merged_df = general_details_df.merge(pivot_df, left_on='id', right_on='stock_id',how='inner')
+    merged_df = merged_df.merge(risk_statistics_df, left_on='id', right_on='stock_id')
+    # # Filter ETFs with low stock position (adjust the threshold as needed)
+    # low_stock_threshold = 0.1
+    # filtered_df = merged_df[merged_df['stockPosition'] < low_stock_threshold]
 
-# # Extract and display the required information (id and YTD performance)
-# output_etf = selected_etf[['id', 'ytdReturn']]
+    # # Find the ETF with the highest yield among the filtered ETFs
+    # selected_etf = filtered_df.loc[filtered_df['yield'].idxmax()]
 
-# Print the selected ETF
+    # # Extract and display the required information (id and YTD performance)
+    # output_etf = selected_etf[['id', 'ytdReturn']]
 
-merged_df = merged_df.drop_duplicates(subset=['id'])
-print(merged_df)
-print(merged_df.info())
+    # Print the selected ETF
 
-
-# The 
-
-# In[152]:
+    merged_df = merged_df.drop_duplicates(subset=['id'])
+    print(merged_df)
+    print(merged_df.info())
 
 
-merged_df = merged_df.drop(columns=['longSummary'])
+    # The 
+
+    # In[152]:
 
 
-# In[154]:
+    merged_df = merged_df.drop(columns=['longSummary'])
 
 
-# Filter rows for stock_id 1 and stock_id 5
-fund1 = merged_df[merged_df['id'] == 1].iloc[0, 1:]
-fund5 = merged_df[merged_df['id'] == 4].iloc[0, 1:]
-
-# Calculate Euclidean distance
-dist = distance.euclidean(fund1[2:], fund5[2:])
-
-print(dist)
+    # In[154]:
 
 
-# In[ ]:
+    # # Filter rows for stock_id 1 and stock_id 5
+    # fund1 = merged_df[merged_df['id'] == 1].iloc[0, 1:]
+    # fund5 = merged_df[merged_df['id'] == 4].iloc[0, 1:]
+
+    # # Calculate Euclidean distance
+    # dist = distance.euclidean(fund1[2:], fund5[2:])
+
+    # print(dist)
 
 
-# with open("ETF_list_truncated.csv", "r") as fr, open("out.csv", "w", newline='') as fw:
-#     cr = csv.reader(fr, delimiter=";")
-#     cw = csv.writer(fw, delimiter=";")
-#     cw.writerow(next(cr))  # write title as-is
-#     cw.writerows(reversed(list(cr)))
-    
-    
+    # In[ ]:
 
 
-# In[199]:
+    # with open("ETF_list_truncated.csv", "r") as fr, open("out.csv", "w", newline='') as fw:
+    #     cr = csv.reader(fr, delimiter=";")
+    #     cw = csv.writer(fw, delimiter=";")
+    #     cw.writerow(next(cr))  # write title as-is
+    #     cw.writerows(reversed(list(cr)))
+        
+
+    etf_columns_df=etf_db_df.filter(['Symbol',
+                                    'YTD Price Change',
+                                    '3 Year',
+                                    'Annual Dividend Yield %',
+                                    'ESG Score Global Percentile (%)',
+                                    ]
+                                    , axis=1)
 
 
-etf_columns_df=etf_db_df.filter(['Symbol',
-                                 'YTD Price Change',
-                                 '3 Year',
-                                 'Annual Dividend Yield %',
-                                 'ESG Score Global Percentile (%)',
-                                 ]
-                                , axis=1)
+    etf_columns_df=etf_columns_df.rename(columns={'Symbol': 'ticker', 'Annual Dividend Yield %' : 'yield_db', 'ESG Score Global Percentile (%)': 'esg_global_score'})
+    etf_columns_df['YTD Price Change']=pd.to_numeric(etf_columns_df['YTD Price Change'].str.strip('%')) / 100
+    etf_columns_df['3 Year']=pd.to_numeric(etf_columns_df['3 Year'].str.strip('%')) / 100
 
-
-etf_columns_df=etf_columns_df.rename(columns={'Symbol': 'ticker', 'Annual Dividend Yield %' : 'yield_db', 'ESG Score Global Percentile (%)': 'esg_global_score'})
-etf_columns_df['YTD Price Change']=pd.to_numeric(etf_columns_df['YTD Price Change'].str.strip('%')) / 100
-etf_columns_df['3 Year']=pd.to_numeric(etf_columns_df['3 Year'].str.strip('%')) / 100
-
-etf_columns_df['yield_db']=pd.to_numeric(etf_columns_df['yield_db'].str.strip('%')) / 100
-etf_columns_df['esg_global_score']=pd.to_numeric(etf_columns_df['esg_global_score'].str.strip('%')) / 100
-etf_columns_df['ticker']=etf_columns_df['ticker'].astype('str')
+    etf_columns_df['yield_db']=pd.to_numeric(etf_columns_df['yield_db'].str.strip('%')) / 100
+    etf_columns_df['esg_global_score']=pd.to_numeric(etf_columns_df['esg_global_score'].str.strip('%')) / 100
+    etf_columns_df['ticker']=etf_columns_df['ticker'].astype('str')
 
 
 
-etf_valid_rows = etf_columns_df.dropna()
-etf_valid_rows = etf_valid_rows.reset_index()
-print(etf_valid_rows)
+    etf_valid_rows = etf_columns_df.dropna()
+    etf_valid_rows = etf_valid_rows.reset_index()
+    print(etf_valid_rows)
 
 
-# In[200]:
+    # Join both datasets
 
 
-# Join both datasets
-
-
-joined_etf = etf_valid_rows.merge(merged_df,left_on='ticker', right_on='symbol')
-joined_etf
-print(joined_etf)
-joined_etf.to_csv("ETFs_formatted.csv")
+    joined_etf = etf_valid_rows.merge(merged_df,left_on='ticker', right_on='symbol')
+    joined_etf
+    print(joined_etf)
+    joined_etf.to_csv("ETFs_formatted.csv")
 
 
 # Get the top 5 results (lowest distances)
@@ -136,13 +130,13 @@ joined_etf.to_csv("ETFs_formatted.csv")
 #                 'standardDeviation': 0.22}
 
 
-example_data= joined_etf.loc[joined_etf['ticker'] == 'EMXF']
-print(example_data)
+    example_data= joined_etf.loc[joined_etf['ticker'] == 'EMXF']
+    print(example_data)
 
-# vector_df=pd.DataFrame([example_data])
-top_5_results = calcDistances(get_vector_from_answers(answers), joined_etf)
-print(top_5_results)
-top_5_results.to_csv("distances_sorted.csv")
+    # vector_df=pd.DataFrame([example_data])
+    results = calcDistances(get_vector_from_answers(answers), joined_etf)
+    print(results)
+    results.to_csv("distances_sorted.csv")
 
 
 # In[ ]:
