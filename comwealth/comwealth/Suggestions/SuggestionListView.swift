@@ -34,15 +34,15 @@ struct SuggestionListView: View {
                             .frame(height: 320) // TODO: - Adjust this height
                     }
                 }
+                
+                Button(action: { self.continueTapped() }) {
+                    Text("PROCEED TO BEING RICH")
+                        .bold()
+                        .padding(15)
+                }
+                .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
+                .padding()
             }
-            
-            Button(action: { self.continueTapped() }) {
-                Text("PROCEED TO BEING RICH")
-                    .bold()
-                    .padding(15)
-            }
-            .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
-            .padding()
         }
         .onAppear {
             guard suggestions.isEmpty else {

@@ -259,7 +259,13 @@ struct BinaryChoiceQuestionView: View {
     
     var body: some View {
         VStack {
-            Text(question.title).font(.title).fontWeight(.bold).padding(16)
+            Text(question.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.title)
+                .fontWeight(.bold)
+                .padding(32)
+            
+            Spacer()
             
             HStack {
                 Button(action: { selectChoice(0) }, label: {
@@ -276,6 +282,9 @@ struct BinaryChoiceQuestionView: View {
                 )
 //                .background(RoundedRectangle(cornerRadius: 28).fill(Color.white))
                 
+                Spacer()
+                    .frame(width: 16)
+                
                 Button(action: { selectChoice(1) }, label: {
                     Text(question.choices[1].text)
                         .font(.title3)
@@ -290,6 +299,8 @@ struct BinaryChoiceQuestionView: View {
                 )
             }
             .padding(EdgeInsets(top: 40, leading: 20, bottom: 20, trailing: 20))
+            
+            Spacer()
         }.onAppear {
             self.autoAdvanceProgress = 0
             self.updateChoices()
@@ -535,7 +546,7 @@ struct MultipleChoiceResponseView: View {
     
     @Binding public var selectedIndices: Set<Int>
     
-    var scrollProxy: ScrollViewProxy
+    var scrollProxy: ScrollViewProxy?
     
     @State private var customTextEntry: String = ""
     
@@ -557,7 +568,8 @@ struct MultipleChoiceResponseView: View {
                    )
                     
                 Text(choice.text)
-                    .font(.title3)
+                    .multilineTextAlignment(.leading)
+                    .font(.title2)
                     .fontWeight(choice.selected ? .bold: .regular)
                     .foregroundColor(Color(.label))
                     .padding()
@@ -565,7 +577,7 @@ struct MultipleChoiceResponseView: View {
 
                 Spacer()
             })
-            .cornerRadius(selectedIndices.count == 0 ? 28: 28)
+            .cornerRadius(selectedIndices.count == 0 ? 28 : 28)
             .overlay(RoundedRectangle(cornerRadius: 28)
                         .stroke(choice.selected ? Color.accentColor: Color(.systemGray5), lineWidth: 2))
             .background(RoundedRectangle(cornerRadius: 28).fill(Color.white))
@@ -583,7 +595,7 @@ struct MultipleChoiceResponseView: View {
 
                         .onAppear(perform: {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                self.scrollProxy.scrollTo(Self.OtherTextFieldID, anchor: .bottom)
+                                self.scrollProxy?.scrollTo(Self.OtherTextFieldID, anchor: .bottom)
 
                                 if let text = choice.customTextEntry {
                                     self.customTextEntry = text
@@ -652,7 +664,7 @@ struct MultipleChoiceResponseView: View {
 
 struct MultipleChoiceQuestionView: View {
     @ObservedObject var question: MultipleChoiceQuestion
-    var scrollProxy: ScrollViewProxy
+    var scrollProxy: ScrollViewProxy?
     
     // @State hack required to update view it seems
     @State var selectedIndices: Set<Int> = []
@@ -661,20 +673,25 @@ struct MultipleChoiceQuestionView: View {
     var body: some View {
         VStack {
             Text(question.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.title)
                 .fontWeight(.bold)
-                .padding(EdgeInsets(top:14, leading: 16, bottom: 8, trailing: 16))
+                .padding(32)
                 
             if question.allowsMultipleSelection {
                 Text("Pick as many as you want").font(.title3).italic().foregroundColor(Color(.secondaryLabel))
             }
-                
+            
+            Spacer()
+
             ForEach(question.choices, id: \.uuid) { choice in
                 MultipleChoiceResponseView(question: question,
                                            choice: choice,
                                            selectedIndices: $selectedIndices,
                                            scrollProxy: scrollProxy)
             }
+            
+            Spacer()
         }
         .frame(maxWidth: .infinity) // stretch whole width
         .background(Color.white)
@@ -822,10 +839,12 @@ struct SurveyView: View {
                 
                 ForEach(survey.questions.indices, id: \.self) { i in
                     if i == currentQuestion {
-                        ScrollViewReader { proxy in
-                            ScrollView {
+//                        ScrollViewReader { proxy in
+//                            ScrollView {
+                            VStack {
                                 if let question = survey.questions[currentQuestion] as? MultipleChoiceQuestion {
-                                    MultipleChoiceQuestionView(question: question, scrollProxy: proxy)
+//                                    MultipleChoiceQuestionView(question: question, scrollProxy: proxy)
+                                    MultipleChoiceQuestionView(question: question, scrollProxy: nil)
                                 } else if let question = survey.questions[currentQuestion] as? BinaryQuestion {
                                     BinaryChoiceQuestionView(question: question, onChoiceMade: { nextTapped() })
                                 } else if let question = survey.questions[currentQuestion] as? ContactFormQuestion {
@@ -837,13 +856,13 @@ struct SurveyView: View {
                                 }
                             }
                             .background(Color.white)
-                            .keyboardAware()
+//                            .keyboardAware()
                             .overlay( // simulating nav bar?
                                 Rectangle()
                                     .frame(width: nil, height: 1, alignment: .top)
                                     .foregroundColor(Color(.systemGray4)),
                                 alignment: .top)
-                        }
+//                        }
                     }
                 }
                 
@@ -852,20 +871,24 @@ struct SurveyView: View {
                         Text("Previous")
                             .foregroundColor(Color(.secondaryLabel))
                             .bold()
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(CustomButtonStyle(bgColor: Color(.systemGray5)))
                     
+                    
                     Spacer()
+                        .frame(width: 16)
                            
                     Button(action: { nextTapped() }) {
                         Text("Next")
                             .bold()
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(CustomButtonStyle(bgColor: Color.accentColor))
-                                    
+                    
                 }
-                .padding(EdgeInsets(top: 12, leading: 22, bottom: 18, trailing: 22))
-                .background(Color(.systemGray6))
+                .padding(EdgeInsets(top: 16 , leading: 24, bottom: 48, trailing: 24))
+//                .background(Color(.systemGray6))
                 .edgesIgnoringSafeArea([.leading, .trailing])
             }
             .background(Color.white)

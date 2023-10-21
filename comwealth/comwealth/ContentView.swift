@@ -27,7 +27,7 @@ class SurveyDelegate: SurveyViewDelegate {
 
 struct ContentView: View {
     let delegate = SurveyDelegate()
-    var survey: Survey = SurveyQuestions().sampleSurvey
+    var survey: Survey = SurveyQuestions.shared.preferencesSurvey
     
     init() {
         let jsonUrl = URL.documentsDirectory.appendingPathComponent("sample_survey.json")
