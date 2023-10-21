@@ -19,6 +19,9 @@
 		11B472E62AE2C074004A1CD2 /* SuggestionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472E52AE2C074004A1CD2 /* SuggestionListView.swift */; };
 		11B472E82AE2C07F004A1CD2 /* SuggestionDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472E72AE2C07F004A1CD2 /* SuggestionDetailsView.swift */; };
 		11B472EB2AE2C09B004A1CD2 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B472EA2AE2C09B004A1CD2 /* SummaryView.swift */; };
+		11DA68DD2AE3E7C100D4EB69 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DA68DC2AE3E7C100D4EB69 /* ChartView.swift */; };
+		11DA68DF2AE41F9700D4EB69 /* SuggestionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DA68DE2AE41F9700D4EB69 /* SuggestionModel.swift */; };
+		11DA68E12AE41FCA00D4EB69 /* SuggestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DA68E02AE41FCA00D4EB69 /* SuggestionView.swift */; };
 		783C25AC2AE3C915004A47F6 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783C25AB2AE3C915004A47F6 /* Color.swift */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +39,9 @@
 		11B472E52AE2C074004A1CD2 /* SuggestionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionListView.swift; sourceTree = "<group>"; };
 		11B472E72AE2C07F004A1CD2 /* SuggestionDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionDetailsView.swift; sourceTree = "<group>"; };
 		11B472EA2AE2C09B004A1CD2 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		11DA68DC2AE3E7C100D4EB69 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		11DA68DE2AE41F9700D4EB69 /* SuggestionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionModel.swift; sourceTree = "<group>"; };
+		11DA68E02AE41FCA00D4EB69 /* SuggestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionView.swift; sourceTree = "<group>"; };
 		783C25AB2AE3C915004A47F6 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Color.swift; path = comwealth/Helpers/Color.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -74,6 +80,7 @@
 				11B472E92AE2C089004A1CD2 /* Summary */,
 				11B472E42AE2C049004A1CD2 /* Suggestions */,
 				11B472D82AE29ED4004A1CD2 /* Survey */,
+				11DA68DB2AE3E79700D4EB69 /* Charts */,
 				11B472D92AE29EE3004A1CD2 /* Helpers */,
 				11B472CE2AE29E37004A1CD2 /* Assets.xcassets */,
 				11B472D02AE29E37004A1CD2 /* Preview Content */,
@@ -92,9 +99,9 @@
 		11B472D82AE29ED4004A1CD2 /* Survey */ = {
 			isa = PBXGroup;
 			children = (
-				11B472DA2AE2A274004A1CD2 /* SurveyView.swift */,
 				11B472DC2AE2A27D004A1CD2 /* SurveyModel.swift */,
 				11B472DE2AE2A2C2004A1CD2 /* SurveyQuestions.swift */,
+				11B472DA2AE2A274004A1CD2 /* SurveyView.swift */,
 			);
 			path = Survey;
 			sourceTree = "<group>";
@@ -112,8 +119,10 @@
 		11B472E42AE2C049004A1CD2 /* Suggestions */ = {
 			isa = PBXGroup;
 			children = (
+				11DA68E02AE41FCA00D4EB69 /* SuggestionView.swift */,
 				11B472E52AE2C074004A1CD2 /* SuggestionListView.swift */,
 				11B472E72AE2C07F004A1CD2 /* SuggestionDetailsView.swift */,
+				11DA68DE2AE41F9700D4EB69 /* SuggestionModel.swift */,
 			);
 			path = Suggestions;
 			sourceTree = "<group>";
@@ -124,6 +133,14 @@
 				11B472EA2AE2C09B004A1CD2 /* SummaryView.swift */,
 			);
 			path = Summary;
+			sourceTree = "<group>";
+		};
+		11DA68DB2AE3E79700D4EB69 /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				11DA68DC2AE3E7C100D4EB69 /* ChartView.swift */,
+			);
+			path = Charts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,7 +178,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 11B472C22AE29E36004A1CD2 /* Build configuration list for PBXProject "comwealth" */;
+			buildConfigurationList = 11B472C22AE29E36004A1CD2 /* Build configuration list for PBXProject "Comwealth" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -196,6 +213,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11DA68DF2AE41F9700D4EB69 /* SuggestionModel.swift in Sources */,
 				11B472DF2AE2A2C2004A1CD2 /* SurveyQuestions.swift in Sources */,
 				11B472E12AE2A2D7004A1CD2 /* SurveyHelper.swift in Sources */,
 				783C25AC2AE3C915004A47F6 /* Color.swift in Sources */,
@@ -203,10 +221,12 @@
 				11B472CD2AE29E36004A1CD2 /* ContentView.swift in Sources */,
 				11B472CB2AE29E36004A1CD2 /* ComwealthApp.swift in Sources */,
 				11B472E82AE2C07F004A1CD2 /* SuggestionDetailsView.swift in Sources */,
+				11DA68E12AE41FCA00D4EB69 /* SuggestionView.swift in Sources */,
 				11B472DB2AE2A274004A1CD2 /* SurveyView.swift in Sources */,
 				11B472EB2AE2C09B004A1CD2 /* SummaryView.swift in Sources */,
 				11B472E32AE2A2E1004A1CD2 /* KeyboardAware.swift in Sources */,
 				11B472DD2AE2A27D004A1CD2 /* SurveyModel.swift in Sources */,
+				11DA68DD2AE3E7C100D4EB69 /* ChartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,7 +413,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		11B472C22AE29E36004A1CD2 /* Build configuration list for PBXProject "comwealth" */ = {
+		11B472C22AE29E36004A1CD2 /* Build configuration list for PBXProject "Comwealth" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				11B472D32AE29E37004A1CD2 /* Debug */,
