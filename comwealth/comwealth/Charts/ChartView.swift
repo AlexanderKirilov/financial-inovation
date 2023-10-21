@@ -95,9 +95,30 @@ enum ChartData {
 
 // MARK: - Models
 
-struct DataPoint {
+struct DataPoint: Decodable {
     let date: Date
     let value: Int
+    
+    init(date: Date, value: Int) {
+        self.date = date
+        self.value = value
+    }
+    
+    enum CodingKeys: CodingKey {
+        case date
+        case value
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let dateString = try container.decode(String.self, forKey: .date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        
+        self.date = dateFormatter.date(from: dateString)!
+        self.value = try container.decode(Int.self, forKey: .value)
+    }
 }
 
 struct Series: Identifiable {

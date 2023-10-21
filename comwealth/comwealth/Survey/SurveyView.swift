@@ -757,7 +757,7 @@ struct SurveyView: View {
         case summary
     }
     
-    @State private var surveyState: SurveyState = .onboarding
+    @State private var surveyState: SurveyState = .suggestions
     @State private var processing = false
     
     @ObservedObject private var keyboard = KeyboardResponder()

@@ -57,12 +57,11 @@ struct SuggestionListView: View {
             API.fetchSuggestions(for: survey) { result in
                 isLoading = false
                 switch result {
-                case .success(let data):
+                case .success(let tickers):
                     print("✅ OPAAAAAAA")
-                    let response = try? JSONDecoder().decode(SuggestionResponse.self, from: data)
-                    suggestions = [Ticker.sample, Ticker.sample, Ticker.sample]
+                    suggestions = tickers
                 case .failure(let error):
-                    print("❌ OPAAAAAAA")
+                    print("❌ OPAAAAAAA", error.localizedDescription)
                     suggestions = []
                 }
             }

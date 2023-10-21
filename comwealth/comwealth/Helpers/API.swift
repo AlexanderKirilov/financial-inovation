@@ -9,18 +9,24 @@ import Foundation
 
 enum API {
     static private let scheme = "https"
-    static private let baseURL = "055c6ca89da8e1.lhr.life"
+    static private let baseURL = "3e1f2b2a42c58d.lhr.life"
     static private let endpoint = "suggestions"
     
-    static func fetchSuggestions(for survey: Survey, then handler: @escaping (Result<Data, Error>) -> Void) { // replace Data with [Ticker]
+    static func fetchSuggestions(for survey: Survey, then handler: @escaping (Result<[Ticker], Error>) -> Void) {
         let url = URL(string: "\(scheme)://\(baseURL)/\(endpoint)")!
         let body = (try? JSONEncoder().encode(survey)) ?? Data()
         sendPostRequest(to: url, body: body) { result in
-            
-            
-            
-            // do parsing
-            handler(result)
+            switch result {
+            case .failure(let error):
+                handler(.failure(error))
+            case .success(let data):
+                do {
+                    let response = try JSONDecoder().decode(SuggestionResponse.self, from: data)
+                    handler(.success(response.data))
+                } catch {
+                    handler(.failure(error))
+                }
+            }
         }
     }
     

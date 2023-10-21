@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum Sector: String {
+enum Sector: String, Decodable {
     case realEstate = "realestate"
     case cyclical = "consumer_cyclical"
     case defensive = "consumer_defensive"
@@ -50,7 +50,8 @@ enum Sector: String {
     }
 }
 
-struct Ticker: Identifiable {
+struct Ticker: Identifiable, Decodable {
+    let id: Int
     let symbol: String
     let longName: String?
     let sector: Sector
@@ -59,13 +60,13 @@ struct Ticker: Identifiable {
     let performancePercentage: Double
     let chartPoints: [DataPoint]
     
-    var id: String { UUID().uuidString }
     var image: Image { sector.image }
     var displayName: String { longName ?? symbol }
     var displayPerformance: String { "+\(String(format: "%.2f", performancePercentage))%" }
     var description: String { shortSummary ?? longSummary }
     
-    static let sample = Ticker(symbol: "DJUSRE",
+    static let sample = Ticker(id: 1,
+                               symbol: "DJUSRE",
                                longName: "Dow Jones U.S. Real Estate Index",
                                sector: .realEstate,
                                shortSummary: "Non-homeless index",
@@ -74,17 +75,7 @@ struct Ticker: Identifiable {
                                chartPoints: ChartData.last30Days.first!.points)
 }
 
-//struct SuggestionResponse: Codable {
-//    struct ResponseData {
-//        let etfs: [Ticker]
-//    }
-//    
-//    let status: String
-//    let data: ResponseData
-//    
-//    init(from decoder: Decoder) throws {
-//        // add parsing here
-//        self.status = "success"
-//        self.data = ResponseData(etfs: [])
-//    }
-//}
+struct SuggestionResponse: Decodable {
+    let success: Bool
+    let data: [Ticker]
+}
