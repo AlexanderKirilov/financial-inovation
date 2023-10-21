@@ -178,3 +178,10 @@ struct SuggestionListView: View {
         .frame(height: 300)
     }
 }
+
+struct SuggestionListView_Previews: PreviewProvider {
+    static var previews: some View {
+        SuggestionListView()
+            .preferredColorScheme(.light)
+    }
+}

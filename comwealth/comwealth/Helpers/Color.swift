@@ -7,7 +7,9 @@
 
 import SwiftUI
 
+#if swift(<5.9)
 extension Color {
     static let coral = Color("Coral")
     static let turquoise = Color("Turquoise")
 }
+#endif

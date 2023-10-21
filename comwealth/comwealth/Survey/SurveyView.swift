@@ -945,3 +945,10 @@ struct SurveyView: View {
         self.surveyState = .suggestions
     }
 }
+
+struct SurveyView_Previews: PreviewProvider {
+    static var previews: some View {
+        SurveyView(survey: SurveyQuestions().sampleSurvey)
+            .preferredColorScheme(.light)
+    }
+}
