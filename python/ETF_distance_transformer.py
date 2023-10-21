@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 from scipy.spatial import distance
 import csv
+import json
 import sys
 
 # Load data from separate CSV files
@@ -171,10 +172,7 @@ def get_vector_from_answers(answers):
         'investment-horizon': 'standardDeviation',
          'finance-risk': 'standardDeviation',
          'expected-return': '3 Year',
-         'sustainability': 'esg_global_score',
-         'decision-making': ,
-         '20-percent-loss': ,
-         'proficiency': ,
+         'sustainability': 'esg_global_score'
      }
         #TODO: Make this more sophisticated
     question_value_mappings = {
@@ -228,11 +226,13 @@ def calcDistances(input_df,reference_df):
 #Read from stdin to get answers
 ### NOT TESTED
 def read_from_stdin:
-    answers = {}
-    for column in columns:
-        answer = input()
-        answers[column] = answer
+    try:
+        input_data = sys.stdin.read()
+        parsed_data = json.loads(input_data)
 
+    except:
+        print('Error reading from stdin')
+        return None
 # Append the answers as a new row to the DataFrame
     
-    return answers
+    return parsed_data
