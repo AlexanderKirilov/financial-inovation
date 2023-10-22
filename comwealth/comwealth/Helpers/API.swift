@@ -8,8 +8,8 @@
 import Foundation
 
 enum API {
-    static private let scheme = "https"
-    static private let baseURL = "16e53b8df08e33.lhr.life"
+    static private let scheme = "http"
+    static private let baseURL = "0.0.0.0:9001"
     static private let endpoint = "suggestions"
     
     static func fetchSuggestions(for survey: Survey, then handler: @escaping (Result<[Ticker], Error>) -> Void) {
