@@ -44,6 +44,7 @@
 		11DA68DE2AE41F9700D4EB69 /* SuggestionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionModel.swift; sourceTree = "<group>"; };
 		11DA68E02AE41FCA00D4EB69 /* SuggestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionView.swift; sourceTree = "<group>"; };
 		11DA68E22AE4777900D4EB69 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		11DA68E42AE5222100D4EB69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		783C25AB2AE3C915004A47F6 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Color.swift; path = comwealth/Helpers/Color.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -77,6 +78,7 @@
 		11B472C92AE29E36004A1CD2 /* Comwealth */ = {
 			isa = PBXGroup;
 			children = (
+				11DA68E42AE5222100D4EB69 /* Info.plist */,
 				11B472CA2AE29E36004A1CD2 /* ComwealthApp.swift */,
 				11B472CC2AE29E36004A1CD2 /* ContentView.swift */,
 				11B472E92AE2C089004A1CD2 /* Summary */,
@@ -366,6 +368,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Comwealth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Comwealth/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = comwealth;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -395,6 +398,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Comwealth/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Comwealth/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = comwealth;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

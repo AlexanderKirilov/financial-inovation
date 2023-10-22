@@ -78,12 +78,12 @@ enum ChartData {
         ])
     ]
     
-    static private func date(year: Int,
-                             month: Int,
-                             day: Int = 1,
-                             hour: Int = 0,
-                             minutes: Int = 0,
-                             seconds: Int = 0) -> Date {
+    static func date(year: Int,
+                     month: Int,
+                     day: Int = 1,
+                     hour: Int = 0,
+                     minutes: Int = 0,
+                     seconds: Int = 0) -> Date {
         Calendar.current.date(from: DateComponents(year: year,
                                                    month: month,
                                                    day: day,
@@ -117,7 +117,8 @@ struct DataPoint: Decodable {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         
         self.date = dateFormatter.date(from: dateString)!
-        self.value = try container.decode(Int.self, forKey: .value)
+        let floatingValue = try container.decode(Double.self, forKey: .value)
+        self.value = Int(floatingValue)
     }
 }
 
