@@ -131,7 +131,23 @@ struct SurveyQuestions {
                 BinaryQuestion(title: "Is it important for you to make investments in environmentally sustainable companies?",
                                answers: ["No", "Yes"],
                                autoAdvanceOnChoice: true,
-                               tag: "sustainability")
+                               tag: "sustainability"),
+                MultipleChoiceQuestion(title: "Which of the following industries do you have a preference for?",
+                                       items: [
+                                        "realestate",
+                                        "consumer_cyclical",
+                                        "basic_materials",
+                                        "consumer_defensive",
+                                        "technology",
+                                        "communication_services",
+                                        "financial_services",
+                                        "utilities",
+                                        "industrials",
+                                        "energy",
+                                        "healthcare",
+                                       ],
+                                       multiSelect: true,
+                                       tag: "sector-preference")
             ],
             version: "001"
         )

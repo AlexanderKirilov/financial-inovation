@@ -567,7 +567,7 @@ struct MultipleChoiceResponseView: View {
                         
                    )
                     
-                Text(choice.text)
+                Text(question.allowsMultipleSelection ? Sector(rawValue: choice.text)!.name : choice.text)
                     .multilineTextAlignment(.leading)
                     .font(.title2)
                     .fontWeight(choice.selected ? .bold: .regular)
@@ -679,16 +679,28 @@ struct MultipleChoiceQuestionView: View {
                 .padding(32)
                 
             if question.allowsMultipleSelection {
-                Text("Pick as many as you want").font(.title3).italic().foregroundColor(Color(.secondaryLabel))
-            }
-            
-            Spacer()
-
-            ForEach(question.choices, id: \.uuid) { choice in
-                MultipleChoiceResponseView(question: question,
-                                           choice: choice,
-                                           selectedIndices: $selectedIndices,
-                                           scrollProxy: scrollProxy)
+                Text("Pick 3 at most")
+                    .font(.title3)
+                    .italic()
+                    .foregroundColor(Color(.secondaryLabel))
+                
+                Spacer()
+                
+                ScrollView {
+                    ForEach(question.choices, id: \.uuid) { choice in
+                        MultipleChoiceResponseView(question: question,
+                                                   choice: choice,
+                                                   selectedIndices: $selectedIndices,
+                                                   scrollProxy: scrollProxy)
+                    }
+                }
+            } else {
+                ForEach(question.choices, id: \.uuid) { choice in
+                    MultipleChoiceResponseView(question: question,
+                                               choice: choice,
+                                               selectedIndices: $selectedIndices,
+                                               scrollProxy: scrollProxy)
+                }
             }
             
             Spacer()

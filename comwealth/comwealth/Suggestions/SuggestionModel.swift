@@ -21,7 +21,7 @@ enum Sector: String, Decodable {
     case health = "healthcare"
     
     var image: Image {
-        var imageName: String
+        let imageName: String
         switch self {
         case .realEstate:
             imageName = "house.fill"
@@ -47,6 +47,35 @@ enum Sector: String, Decodable {
             imageName = "cross.case.fill"
         }
         return Image(systemName: imageName)
+    }
+    
+    var name: String {
+        let displayName: String
+        switch self {
+        case .realEstate:
+            displayName = "Real Estate"
+        case .cyclical:
+            displayName = "Cyclical (Non-essentials)"
+        case .defensive:
+            displayName = "Defensive (Essentials)"
+        case .materials:
+            displayName = "Raw Materials"
+        case .tech:
+            displayName = "Technology"
+        case .communications:
+            displayName = "Communications"
+        case .financial:
+            displayName = "Finance"
+        case .utilities:
+            displayName = "Utility"
+        case .industrials:
+            displayName = "Industrials"
+        case .energy:
+            displayName = "Energy"
+        case .health:
+            displayName = "Healthcare"
+        }
+        return displayName
     }
 }
 

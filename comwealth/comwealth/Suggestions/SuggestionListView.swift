@@ -62,7 +62,7 @@ struct SuggestionListView: View {
                     suggestions = tickers
                 case .failure(let error):
                     print("❌ OPAAAAAAA", error.localizedDescription)
-                    suggestions = []
+                    suggestions = [Ticker.sample, Ticker.sample, Ticker.sample]
                 }
             }
         }
