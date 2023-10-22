@@ -569,9 +569,9 @@ struct MultipleChoiceResponseView: View {
                     
                 Text(question.allowsMultipleSelection ? Sector(rawValue: choice.text)!.name : choice.text)
                     .multilineTextAlignment(.leading)
-                    .font(.title2)
-                    .fontWeight(choice.selected ? .bold: .regular)
-                    .foregroundColor(Color(.label))
+                    .font(.title3)
+                    .fontWeight(choice.selected ? .semibold : .regular)
+                    .foregroundColor(choice.selected ? .accentColor : Color(.label))
                     .padding()
                 
 
