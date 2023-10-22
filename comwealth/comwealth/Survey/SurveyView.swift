@@ -757,6 +757,7 @@ protocol SurveyViewDelegate: AnyObject {
 }
 
 struct SurveyView: View {
+    @Binding private var path: NavigationPath
     @ObservedObject var survey: Survey
     var delegate: SurveyViewDelegate?
     
@@ -769,12 +770,14 @@ struct SurveyView: View {
         case summary
     }
     
+    
     @State private var surveyState: SurveyState = .onboarding
     @State private var processing = false
     
     @ObservedObject private var keyboard = KeyboardResponder()
     
-    init(survey: Survey, delegate: SurveyViewDelegate? = nil) {
+    init(path: Binding<NavigationPath>, survey: Survey, delegate: SurveyViewDelegate? = nil) {
+        self._path = path
         self.survey = survey
         self.delegate = delegate
     }
@@ -840,41 +843,37 @@ struct SurveyView: View {
                 .padding()
             }
         case .suggestions:
-            SuggestionListView(survey: survey)
+            SuggestionListView(path: $path, survey: survey)
         case .survey:
             VStack(spacing: 0) {
                 let questionTitle = "Question ".appendingFormat("%i / %i", currentQuestion + 1, self.survey.questions.count)
                 Text(questionTitle)
+                    .font(.title3)
                     .bold()
-                    .padding(EdgeInsets(top: 5, leading: 0, bottom: 2, trailing: 0))
+                    .padding(EdgeInsets(top: 4, leading: 0, bottom: 12, trailing: 0))
                     .frame(maxWidth: .infinity)
                 
                 ForEach(survey.questions.indices, id: \.self) { i in
                     if i == currentQuestion {
-//                        ScrollViewReader { proxy in
-//                            ScrollView {
-                            VStack {
-                                if let question = survey.questions[currentQuestion] as? MultipleChoiceQuestion {
-//                                    MultipleChoiceQuestionView(question: question, scrollProxy: proxy)
-                                    MultipleChoiceQuestionView(question: question, scrollProxy: nil)
-                                } else if let question = survey.questions[currentQuestion] as? BinaryQuestion {
-                                    BinaryChoiceQuestionView(question: question, onChoiceMade: { nextTapped() })
-                                } else if let question = survey.questions[currentQuestion] as? ContactFormQuestion {
-                                    ContactFormQuestionView(question: question)
-                                } else if let question = survey.questions[currentQuestion] as? CommentsFormQuestion {
-                                    CommentsFormQuestionView(question: question)
-                                } else if let question = survey.questions[currentQuestion] as? InlineMultipleChoiceQuestionGroup {
-                                    InlineMultipleChoiceQuestionGroupView(group: question)
-                                }
+                        VStack {
+                            if let question = survey.questions[currentQuestion] as? MultipleChoiceQuestion {
+                                MultipleChoiceQuestionView(question: question, scrollProxy: nil)
+                            } else if let question = survey.questions[currentQuestion] as? BinaryQuestion {
+                                BinaryChoiceQuestionView(question: question, onChoiceMade: { nextTapped() })
+                            } else if let question = survey.questions[currentQuestion] as? ContactFormQuestion {
+                                ContactFormQuestionView(question: question)
+                            } else if let question = survey.questions[currentQuestion] as? CommentsFormQuestion {
+                                CommentsFormQuestionView(question: question)
+                            } else if let question = survey.questions[currentQuestion] as? InlineMultipleChoiceQuestionGroup {
+                                InlineMultipleChoiceQuestionGroupView(group: question)
                             }
-                            .background(Color.white)
-//                            .keyboardAware()
-                            .overlay( // simulating nav bar?
-                                Rectangle()
-                                    .frame(width: nil, height: 1, alignment: .top)
-                                    .foregroundColor(Color(.systemGray4)),
-                                alignment: .top)
-//                        }
+                        }
+                        .background(Color.white)
+                        .overlay( // simulating nav bar?
+                            Rectangle()
+                                .frame(width: nil, height: 1, alignment: .top)
+                                .foregroundColor(Color(.systemGray4)),
+                            alignment: .top)
                     }
                 }
                 
@@ -983,7 +982,7 @@ struct SurveyView: View {
 
 struct SurveyView_Previews: PreviewProvider {
     static var previews: some View {
-        SurveyView(survey: SurveyQuestions().sampleSurvey)
+        SurveyView(path: .constant(NavigationPath()), survey: SurveyQuestions().sampleSurvey)
             .preferredColorScheme(.light)
     }
 }

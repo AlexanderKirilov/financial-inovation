@@ -132,22 +132,22 @@ struct SurveyQuestions {
                                answers: ["No", "Yes"],
                                autoAdvanceOnChoice: true,
                                tag: "sustainability"),
-                MultipleChoiceQuestion(title: "Which of the following industries do you have a preference for?",
-                                       items: [
-                                        "realestate",
-                                        "consumer_cyclical",
-                                        "basic_materials",
-                                        "consumer_defensive",
-                                        "technology",
-                                        "communication_services",
-                                        "financial_services",
-                                        "utilities",
-                                        "industrials",
-                                        "energy",
-                                        "healthcare",
-                                       ],
-                                       multiSelect: true,
-                                       tag: "sector-preference")
+//                MultipleChoiceQuestion(title: "Which of the following industries do you have a preference for?",
+//                                       items: [
+//                                        "realestate",
+//                                        "consumer_cyclical",
+//                                        "basic_materials",
+//                                        "consumer_defensive",
+//                                        "technology",
+//                                        "communication_services",
+//                                        "financial_services",
+//                                        "utilities",
+//                                        "industrials",
+//                                        "energy",
+//                                        "healthcare",
+//                                       ],
+//                                       multiSelect: true,
+//                                       tag: "sector-preference")
             ],
             version: "001"
         )

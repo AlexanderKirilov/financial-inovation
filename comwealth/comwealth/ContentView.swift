@@ -28,21 +28,24 @@ class SurveyDelegate: SurveyViewDelegate {
 struct ContentView: View {
     let delegate = SurveyDelegate()
     var survey: Survey = SurveyQuestions.shared.preferencesSurvey
+    @State private var path = NavigationPath()
     
     init() {
-        let jsonUrl = URL.documentsDirectory.appendingPathComponent("sample_survey.json")
-        try? Survey.saveToFile(survey: survey, url: jsonUrl)
-        print("Saved survey to:\n", jsonUrl.path)
- 
-        if let loadedSurvey = try? Survey.loadFromFile(url: jsonUrl) {
-            print("Loaded survey from:\n ", jsonUrl)
-            survey = loadedSurvey
-        }
+//        let jsonUrl = URL.documentsDirectory.appendingPathComponent("sample_survey.json")
+//        try? Survey.saveToFile(survey: survey, url: jsonUrl)
+//        print("Saved survey to:\n", jsonUrl.path)
+// 
+//        if let loadedSurvey = try? Survey.loadFromFile(url: jsonUrl) {
+//            print("Loaded survey from:\n ", jsonUrl)
+//            survey = loadedSurvey
+//        }
     }
     
     var body: some View {
-        SurveyView(survey: survey, delegate: delegate)
-            .preferredColorScheme(.light)
+        NavigationStack(path: $path) {
+            SurveyView(path: $path, survey: survey, delegate: delegate)
+                .preferredColorScheme(.light)
+        }
     }
 }
 

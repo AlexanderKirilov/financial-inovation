@@ -8,25 +8,23 @@
 import SwiftUI
 
 struct SuggestionListView: View {
+    @Binding private var path: NavigationPath
     private let survey: Survey
-    @State private var suggestions: [Ticker]
+    @State private var suggestions: [Ticker] = []
     @State private var isLoading: Bool = false
     
-    init(survey: Survey = SurveyQuestions.shared.preferencesSurvey, suggestions: [Ticker] = []) {
+    init(path: Binding<NavigationPath>,
+         survey: Survey = SurveyQuestions.shared.preferencesSurvey,
+         suggestions: [Ticker] = []) {
+        self._path = path
         self.survey = survey
         self.suggestions = suggestions
-        print(survey)
     }
     
     var body: some View {
         VStack {
-            Text("Suggestions")
-                .bold()
-                .padding(EdgeInsets(top: 24, leading: 0, bottom: 8, trailing: 0))
-            
-            Spacer()
-            
             if isLoading {
+                Spacer()
                 ProgressView()
                 Spacer()
                     .frame(maxHeight: .infinity)
@@ -38,7 +36,7 @@ struct SuggestionListView: View {
                     }
                 }
                 
-                Button(action: { self.continueTapped() }) {
+                Button(action: continueTapped) {
                     Text("PROCEED TO BEING RICH")
                         .bold()
                         .padding(15)
@@ -47,35 +45,45 @@ struct SuggestionListView: View {
                 .padding()
             }
         }
-        .onAppear {
-            guard suggestions.isEmpty else {
-                return
+        .onAppear(perform: fetchData)
+        .navigationTitle("Suggestions")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: String.self) { view in
+            switch view {
+            case "SummaryView":
+                SummaryView(path: $path, suggestions: suggestions)
+            default:
+                Text("Unknown")
             }
-            
-            print("🛜 Gotta do the fetching n shit")
-            isLoading = true
-            API.fetchSuggestions(for: survey) { result in
-                isLoading = false
-                switch result {
-                case .success(let tickers):
-                    print("✅ OPAAAAAAA")
-                    suggestions = tickers
-                case .failure(let error):
-                    print("❌ OPAAAAAAA", error.localizedDescription)
-                    suggestions = [Ticker.sample, Ticker.sample, Ticker.sample]
-                }
+        }
+    }
+    
+    private func fetchData() {
+//        guard suggestions.isEmpty else { return }
+        print("🛜 Fetching...")
+        isLoading = true
+        API.fetchSuggestions(for: survey) { result in
+            isLoading = false
+            switch result {
+            case .success(let tickers):
+                print("✅ OPAAAAAAA")
+                suggestions = tickers
+            case .failure(let error):
+                print("❌ OPAAAAAAA", error.localizedDescription)
+                suggestions = [Ticker.sample, Ticker.sample, Ticker.sample]
             }
         }
     }
     
     private func continueTapped() {
-        print("✅ Show detail screen")
+        print("🟰 Show summary screen")
+        path.append("SummaryView")
     }
 }
 
 struct SuggestionListView_Previews: PreviewProvider {
     static var previews: some View {
-        SuggestionListView(suggestions: [Ticker.sample, Ticker.sample])
+        SuggestionListView(path: .constant(NavigationPath()), suggestions: [Ticker.sample, Ticker.sample])
             .preferredColorScheme(.light)
     }
 }
